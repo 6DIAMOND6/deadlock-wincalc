@@ -103,8 +103,87 @@ h1.mega{font:900 clamp(28px,5vw,58px) Cinzel,serif;text-align:center;letter-spac
 .tin:focus{border-color:#39c6d6;box-shadow:0 0 0 2px rgba(57,198,214,.15)}
 .tin.bad{border-color:#ff5a5f;color:#ff9a9d;box-shadow:0 0 0 2px rgba(255,90,95,.16)}
 .terrtxt{color:#ff5a5f;font-weight:700}
+.idk{margin-top:8px;padding:10px 12px;border:1px dashed #3a3a4c;border-radius:4px;font:600 12.5px/1.4 Inter,sans-serif;color:var(--muted)}
+.pts.zerov{color:#8a8a99;border-color:var(--line);box-shadow:none}
+/* компактная группа крови в левой колонке */
+#w-blood .wb{padding:12px}
+#w-blood .frm{gap:6px;margin-top:0;flex-wrap:wrap}
+#w-blood .sel{padding:6px 8px;font-size:12px}
+#w-blood .frm button{padding:6px 10px;font-size:10px}
+#w-blood .row{padding:3px 0;font-size:11.5px}
+#w-blood .wk{gap:3px;margin:8px 0}
+#w-blood .wk div{padding:4px 0;font-size:10px;line-height:1.25}
+#w-blood .wk div b{font-size:11px}
+#w-blood .pts{margin-top:9px;padding:7px;font-size:21px}
+#w-blood .note{margin-top:8px;font-size:10.5px;line-height:1.4}
+#w-blood .idk{margin-top:8px;padding:8px 10px;font-size:11px}
 .wretry{margin-top:10px;padding:7px 14px;font:700 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--gold);background:rgba(230,180,94,.1);border:1px solid rgba(230,180,94,.5);border-radius:3px}
 .wretry:hover{background:rgba(230,180,94,.2)}
+/* три окна в ряд: YouTube · Twitch · чат */
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
+.trio>.win{display:flex;flex-direction:column;min-width:0}
+.trio>.win>.wb{flex:1;display:flex;flex-direction:column;min-width:0}
+.trio{grid-auto-rows:1fr}         /* строка одна: высоту задаёт самое высокое окно, но не чат безгранично */
+.trio>#w-chat{max-height:360px}
+.trio>#w-chat>.wb{overflow:hidden}
+.trio .chatlist{max-height:100%;overflow-y:auto}
+@media(max-width:1100px){.trio{grid-template-columns:1fr}}
+/* twitch: онлайн каналов */
+.twrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.twch{display:flex;align-items:center;gap:9px;padding:11px 12px;border:1px solid var(--line);border-radius:4px;background:rgba(0,0,0,.22);text-decoration:none;transition:.2s;min-width:0}
+.twch .dot{flex:none;width:9px;height:9px;border-radius:50%;background:#44444f}
+.twch .twlog{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 13px Inter,sans-serif;color:var(--text)}
+.twch .twst{margin-left:auto;flex:none;font:700 10.5px Inter,sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.twch.on{border-color:rgba(145,71,255,.55);background:linear-gradient(90deg,rgba(145,71,255,.16),rgba(145,71,255,.04))}
+.twch.on .dot{background:#9146ff;box-shadow:0 0 10px #9146ff;animation:twPulse 1.6s ease-in-out infinite}
+.twch.on .twst{color:#b79bff}
+.twch.unk{opacity:.6}
+@keyframes twPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+.trio .twrow{grid-template-columns:1fr}     /* в узком окне каналы идут столбиком, имена не обрезаются */
+.trio .twch{padding:8px 10px;gap:7px}
+.trio .twch .twlog{font-size:12px}
+.trio .twch .twst{font-size:9.5px}
+.trio .note{font-size:10.5px}
+@media(max-width:960px){.twrow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.twrow,.trio .twrow{grid-template-columns:1fr}}
+/* чат стрима */
+.chatlist{max-height:260px;overflow-y:auto;padding:10px 12px;border:1px solid var(--line);border-radius:4px;background:rgba(0,0,0,.28);scrollbar-width:thin}
+.chatlist::-webkit-scrollbar{width:8px}.chatlist::-webkit-scrollbar-thumb{background:#2a2a38;border-radius:4px}
+.cm{display:flex;align-items:baseline;gap:7px;padding:3px 0;font-size:13px;line-height:1.45;border-bottom:1px solid rgba(255,255,255,.03)}
+.cm:last-child{border-bottom:0}
+.cm .cb{flex:none;padding:1px 5px;border-radius:2px;font:700 9px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.cb-host{background:rgba(255,90,95,.2);color:#ff8f92}
+.cb-mod{background:rgba(95,211,141,.16);color:#7fe0a6}
+.cb-vip{background:rgba(230,180,94,.18);color:#e6b45e}
+.cb-sub{background:rgba(145,71,255,.2);color:#b79bff}
+.cm .cu{flex:none;font-weight:700}
+.cm .ct{min-width:0;word-break:break-word;color:var(--text)}
+.chatoff{padding:22px 10px;text-align:center;font:700 18px Cinzel,serif;letter-spacing:.06em;color:var(--muted);border:1px dashed #3a3a4c;border-radius:4px}
+#w-chat .wb{min-height:0}
+.trio .chatlist{flex:1;max-height:none;min-height:150px;padding:8px 10px;overflow-x:hidden}
+.trio .cm{font-size:11.5px;gap:5px;flex-wrap:wrap;padding:2px 0}
+.trio .cm .ct{flex:1 1 100%;min-width:0;overflow-wrap:anywhere}
+.trio .chatlist .cu{font-size:12px;max-width:100%;overflow-wrap:anywhere}
+/* карта таро дня */
+.tarot{display:grid;grid-template-columns:112px minmax(0,1fr) 210px;gap:18px;align-items:start}
+.tpts{align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+.tpts .pts{margin:0;font-size:34px;padding:16px 10px}
+.tpts small{display:block;margin-top:8px;text-align:center;font:600 11px Inter,sans-serif;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.tsrc{margin-top:10px;font:500 11px Inter,sans-serif;color:#5b5b69}
+.tpic{flex:none;width:112px;height:180px;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:#0c0c11;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 22px rgba(0,0,0,.45)}
+.tpic img{width:100%;height:100%;object-fit:cover;display:block}
+.tpic .iphl{font:900 34px Cinzel,serif;color:#2e2e3c}
+.tinfo{min-width:0}
+.tname{margin:0 0 4px;font:700 20px Cinzel,serif;color:var(--gold);letter-spacing:.02em}
+.tcat{margin-bottom:8px;font:600 12px Inter,sans-serif;color:var(--muted);letter-spacing:.04em}
+.tmean{font-size:13.5px;line-height:1.5;color:var(--text)}
+@media(max-width:720px){
+  .tarot{grid-template-columns:96px minmax(0,1fr);gap:12px}
+  .tpic{width:96px;height:154px}
+  .tname{font-size:17px}.tmean{font-size:12.5px}
+  .tpts{grid-column:1/-1}
+  .tpts .pts{font-size:26px;padding:10px}
+}
 /* компактный столбик в левой колонке */
 #w-team .wb{padding:12px}
 #w-team .tin{padding:3px 8px;font-size:12.5px;text-align:left}
@@ -294,6 +373,7 @@ footer{text-align:center;color:#5d5b68;font-size:12px;padding:10px 20px 40px}
 <main class="layout">
   <aside class="col">
     <section class="win" id="w-team"><div class="wt"><i></i>Шанс победы на команду<span class="tag" id="t-team"></span></div><div class="wb" id="b-team"></div></section>
+    <section class="win" id="w-blood"><div class="wt"><span class="wtalert"></span><i></i>Группа крови<span class="tag" id="t-blood"></span></div><div class="wb" id="b-blood"></div></section>
     <section class="win" id="w-btc"><div class="wt"><i></i>Курс биткоина<span class="tag" id="t-btc"></span></div><div class="wb" id="b-btc"></div></section>
     <section class="win" id="w-quake"><div class="wt"><i></i>Сейсмомонитор · зона Нью-Йорка<span class="tag" id="t-quake"></span></div><div class="wb" id="b-quake"></div></section>
   </aside>
@@ -335,7 +415,14 @@ footer{text-align:center;color:#5d5b68;font-size:12px;padding:10px 20px 40px}
       <section class="win" id="w-rank"><div class="wt"><i></i>Ранг дня<span class="tag" id="t-rank"></span></div><div class="wb" id="b-rank"></div></section>
     </div>
 
-    <section class="win" id="w-uz"><div class="wt"><i></i>Уровень угрозы узбека<span class="tag" id="t-uz"></span></div><div class="wb" id="b-uz"></div></section>
+    <div class="trio">
+    <section class="win s4" id="w-yt"><div class="wt"><i></i>YouTube · radiohead - krip<span class="tag" id="t-yt"></span></div><div class="wb" id="b-yt"></div></section>
+
+  <section class="win s4" id="w-twitch"><div class="wt"><i></i>Twitch · онлайн каналов<span class="tag" id="t-twitch"></span></div><div class="wb" id="b-twitch"></div></section>
+
+  <section class="win s4" id="w-chat"><div class="wt"><i></i>Чат стрима · Metro<span class="tag" id="t-chat"></span></div><div class="wb" id="b-chat"></div></section>
+    </div>
+
   </section>
 
   <aside class="col">
@@ -349,17 +436,17 @@ footer{text-align:center;color:#5d5b68;font-size:12px;padding:10px 20px 40px}
         <div id="pres"></div>
       </div>
     </section>
-    <section class="win" id="w-yt"><div class="wt"><i></i>YouTube · radiohead - krip<span class="tag" id="t-yt"></span></div><div class="wb" id="b-yt"></div></section>
+    <section class="win" id="w-uz"><div class="wt"><i></i>Уровень угрозы узбека<span class="tag" id="t-uz"></span></div><div class="wb" id="b-uz"></div></section>
   </aside>
 </main>
 
 <div class="grid">
-  <section class="win s12" id="w-wx"><div class="wt"><i></i>Погода Нью-Йорка · розы ветров · воздушные массы · давление<span class="tag" id="t-wx"></span></div><div class="wb" id="b-wx"></div></section>
-
   <section class="win s7" id="w-wd"><div class="wt"><span class="wtalert"></span><i></i>Wordle дня + Гематрия<span class="tag" id="t-wd"></span></div>
     <div class="wb"><div class="wd"><div class="wd-left" id="b-wd"></div><div class="wd-right" id="b-gem"></div></div></div>
   </section>
   <section class="win s5" id="w-fish"><div class="wt"><i></i>Календарь ловли рыбака<span class="tag" id="t-fish"></span></div><div class="wb" id="b-fish"></div></section>
+
+  <section class="win s12" id="w-wx"><div class="wt"><i></i>Погода Нью-Йорка · розы ветров · воздушные массы · давление<span class="tag" id="t-wx"></span></div><div class="wb" id="b-wx"></div></section>
 
   <section class="win s12" id="w-cosmos">
     <div class="wt"><i></i>Космические данные<span class="tag" id="t-cosmos"></span></div>
@@ -371,8 +458,8 @@ footer{text-align:center;color:#5d5b68;font-size:12px;padding:10px 20px 40px}
       <div class="cp astro" id="b-astro"></div>
     </div></div>
   </section>
-</div>
 
+</div>
 
 <script>
 'use strict';
@@ -609,6 +696,7 @@ function ensureStatic(){
   if(!S.wd){S.wd={g:[],status:'play',value:0,gem:null}}
   if(!S.item)S.item=calcItem();
   if(!S.rank)S.rank=calcRank();
+  if(!S.tarot)S.tarot=calcTarot();
   if(!S.team)S.team={inp:['','','','',''],avg:null,vals:[],base:null};
   if(!S.pHero){const n=localStorage.getItem('fate_name');if(n)S.pHero=calcPHero(n)}
   else S.pHero=calcPHero(S.pHero.name);
@@ -674,21 +762,20 @@ function rUz(){
   $('#t-uz').textContent=now.n;
 }
 
-const ITEM_TIERS=[
-  {c:'weapon',t:1,cost:800,n:['Close Quarters', 'Extended Magazine', 'Headshot Booster', 'High-Velocity Rounds', 'Monster Rounds', 'Rapid Rounds', 'Restorative Shot']},
-  {c:'weapon',t:2,cost:1600,n:['Active Reload', 'Fleetfoot', 'Intensifying Magazine', 'Kinetic Dash', 'Long Range', 'Melee Charge', 'Mystic Shot', 'Opening Rounds', 'Recharging Rush', 'Slowing Bullets', 'Spirit Shredder', 'Split Shot', 'Stalker', 'Swift Striker', 'Titanic Magazine', 'Weakening Headshot']},
-  {c:'weapon',t:3,cost:3200,n:['Alchemical Fire', 'Ballistic Enchantment', 'Berserker', 'Blood Tribute', 'Burst Fire', 'Cultist Sacrifice', 'Escalating Resilience', 'Express Shot', 'Headhunter', 'Heroic Aura', 'Hollow Point', 'Hunter\'s Aura', 'Point Blank', 'Shadow Weave', 'Sharpshooter', 'Spirit Rend', 'Tesla Bullets', 'Toxic Bullets', 'Weighted Shots']},
-  {c:'weapon',t:4,cost:6400,n:['Armor Piercer', 'Capacitor', 'Crippling Headshot', 'Crushing Fists', 'Frenzy', 'Glass Cannon', 'Lucky Shot', 'Ricochet', 'Silencer', 'Spellslinger', 'Spiritual Overflow']},
-  {c:'vitality',t:1,cost:800,n:['Extra Health', 'Extra Regen', 'Extra Stamina', 'Grit', 'Healing Rite', 'Melee Lifesteal', 'Rebuttal', 'Sprint Boots']},
-  {c:'vitality',t:2,cost:1600,n:['Battle Vest', 'Bullet Lifesteal', 'Debuff Reducer', 'Enchanter\'s Emblem', 'Enduring Speed', 'Guardian Ward', 'Healbane', 'Healing Booster', 'Reactive Barrier', 'Restorative Locket', 'Return Fire', 'Spirit Lifesteal', 'Spirit Shielding', 'Trophy Collector', 'Weapon Shielding']},
-  {c:'vitality',t:3,cost:3200,n:['Bullet Resilience', 'Counterspell', 'Dispel Magic', 'Fortitude', 'Fury Trance', 'Healing Nova', 'Lifestrike', 'Majestic Leap', 'Metal Skin', 'Rescue Beam', 'Spirit Resilience', 'Stamina Mastery', 'Veil Walker', 'Warp Stone']},
-  {c:'vitality',t:4,cost:6400,n:['Cheat Death', 'Colossus', 'Divine Barrier', 'Diviner\'s Kevlar', 'Healing Tempo', 'Indomitable', 'Infuser', 'Inhibitor', 'Juggernaut', 'Leech', 'Phantom Strike', 'Plated Armor', 'Siphon Bullets', 'Spellbreaker', 'Unstoppable', 'Vampiric Burst', 'Witchmail']},
-  {c:'tech',t:1,cost:800,n:['Extra Charge', 'Extra Spirit', 'Golden Goose Egg', 'Mystic Burst', 'Mystic Expansion', 'Mystic Regeneration', 'Rusted Barrel', 'Spirit Strike']},
-  {c:'tech',t:2,cost:1600,n:['Arcane Surge', 'Bullet Resist Shredder', 'Cold Front', 'Compress Cooldown', 'Duration Extender', 'Improved Spirit', 'Mystic Slow', 'Mystic Vulnerability', 'Quicksilver Reload', 'Slowing Hex', 'Spirit Sap', 'Suppressor']},
-  {c:'tech',t:3,cost:3200,n:['Decay', 'Disarming Hex', 'Greater Expansion', 'Knockdown', 'Radiant Regeneration', 'Rapid Recharge', 'Silence Wave', 'Spirit Snatch', 'Superior Cooldown', 'Superior Duration', 'Surge of Power', 'Tankbuster', 'Torment Pulse']},
-  {c:'tech',t:4,cost:6400,n:['Arctic Blast', 'Boundless Spirit', 'Cursed Relic', 'Echo Shard', 'Escalating Exposure', 'Ethereal Shift', 'Focus Lens', 'Lightning Scroll', 'Magic Carpet', 'Mercurial Magnum', 'Mystic Reverb', 'Refresher', 'Scourge', 'Spirit Burn', 'Transcendent Cooldown', 'Vortex Web']}
+const ITEM_TIERS=[
+  {c:'weapon',t:1,cost:800,n:['Close Quarters', 'Extended Magazine', 'Headshot Booster', 'High-Velocity Rounds', 'Monster Rounds', 'Rapid Rounds', 'Restorative Shot']},
+  {c:'weapon',t:2,cost:1600,n:['Active Reload', 'Fleetfoot', 'Intensifying Magazine', 'Kinetic Dash', 'Long Range', 'Melee Charge', 'Mystic Shot', 'Opening Rounds', 'Recharging Rush', 'Slowing Bullets', 'Spirit Shredder', 'Split Shot', 'Stalker', 'Swift Striker', 'Titanic Magazine', 'Weakening Headshot']},
+  {c:'weapon',t:3,cost:3200,n:['Alchemical Fire', 'Ballistic Enchantment', 'Berserker', 'Blood Tribute', 'Burst Fire', 'Cultist Sacrifice', 'Escalating Resilience', 'Express Shot', 'Headhunter', 'Heroic Aura', 'Hollow Point', 'Hunter\'s Aura', 'Point Blank', 'Shadow Weave', 'Sharpshooter', 'Spirit Rend', 'Tesla Bullets', 'Toxic Bullets', 'Weighted Shots']},
+  {c:'weapon',t:4,cost:6400,n:['Armor Piercer', 'Capacitor', 'Crippling Headshot', 'Crushing Fists', 'Frenzy', 'Glass Cannon', 'Lucky Shot', 'Ricochet', 'Silencer', 'Spellslinger', 'Spiritual Overflow']},
+  {c:'vitality',t:1,cost:800,n:['Extra Health', 'Extra Regen', 'Extra Stamina', 'Grit', 'Healing Rite', 'Melee Lifesteal', 'Rebuttal', 'Sprint Boots']},
+  {c:'vitality',t:2,cost:1600,n:['Battle Vest', 'Bullet Lifesteal', 'Debuff Reducer', 'Enchanter\'s Emblem', 'Enduring Speed', 'Guardian Ward', 'Healbane', 'Healing Booster', 'Reactive Barrier', 'Restorative Locket', 'Return Fire', 'Spirit Lifesteal', 'Spirit Shielding', 'Trophy Collector', 'Weapon Shielding']},
+  {c:'vitality',t:3,cost:3200,n:['Bullet Resilience', 'Counterspell', 'Dispel Magic', 'Fortitude', 'Fury Trance', 'Healing Nova', 'Lifestrike', 'Majestic Leap', 'Metal Skin', 'Rescue Beam', 'Spirit Resilience', 'Stamina Mastery', 'Veil Walker', 'Warp Stone']},
+  {c:'vitality',t:4,cost:6400,n:['Cheat Death', 'Colossus', 'Divine Barrier', 'Diviner\'s Kevlar', 'Healing Tempo', 'Indomitable', 'Infuser', 'Inhibitor', 'Juggernaut', 'Leech', 'Phantom Strike', 'Plated Armor', 'Siphon Bullets', 'Spellbreaker', 'Unstoppable', 'Vampiric Burst', 'Witchmail']},
+  {c:'tech',t:1,cost:800,n:['Extra Charge', 'Extra Spirit', 'Golden Goose Egg', 'Mystic Burst', 'Mystic Expansion', 'Mystic Regeneration', 'Rusted Barrel', 'Spirit Strike']},
+  {c:'tech',t:2,cost:1600,n:['Arcane Surge', 'Bullet Resist Shredder', 'Cold Front', 'Compress Cooldown', 'Duration Extender', 'Improved Spirit', 'Mystic Slow', 'Mystic Vulnerability', 'Quicksilver Reload', 'Slowing Hex', 'Spirit Sap', 'Suppressor']},
+  {c:'tech',t:3,cost:3200,n:['Decay', 'Disarming Hex', 'Greater Expansion', 'Knockdown', 'Radiant Regeneration', 'Rapid Recharge', 'Silence Wave', 'Spirit Snatch', 'Superior Cooldown', 'Superior Duration', 'Surge of Power', 'Tankbuster', 'Torment Pulse']},
+  {c:'tech',t:4,cost:6400,n:['Arctic Blast', 'Boundless Spirit', 'Cursed Relic', 'Echo Shard', 'Escalating Exposure', 'Ethereal Shift', 'Focus Lens', 'Lightning Scroll', 'Magic Carpet', 'Mercurial Magnum', 'Mystic Reverb', 'Refresher', 'Scourge', 'Spirit Burn', 'Transcendent Cooldown', 'Vortex Web']}
 ];
-
 
 /* ================== РАНГ ДНЯ ================== */
 /* Лестница рангов Deadlock, от низшего к высшему. Obscurus = «без ранга». Очков не начисляет. */
@@ -735,7 +822,6 @@ function rRank(){
   rankImg($('#rpic'),r);
   $('#t-rank').textContent=noRank?'без ранга':r.r;
 }
-
 
 /* ================== ШАНС ПОБЕДЫ НА КОМАНДУ ================== */
 /* Вводишь 1–5 процентов (например 51.2) → берётся среднее между шансом сайта и введёнными.
@@ -1499,7 +1585,7 @@ function rWordle(){
   const btn=`<button class="wbtn" onclick="wReveal()"${canPlay?'':' disabled'}>Показать<br>слово</button>`;
   /* бонус Wordle — отдельное поле, независимое от гематрии */
   const bonus=`<div class="pts ${cls(w.value)}">${fmtP(w.value)}<small>бонус за решение Wordle</small></div>`;
-  $('#b-wd').innerHTML=`<div class="whead"><div class="wrules">Guess the 5-letter <b>English</b> word in 6 tries (угадай английское слово из 5 букв).<br>Решишь за ≤3 попыток — <b>+350…+500</b>, за 4–6 — <b>+100…+250</b>.<br><span class="wsrc">${wsrc}</span></div>${btn}</div>
+  $('#b-wd').innerHTML=`<div class="whead">${btn}</div>
   <div class="board">${rows}</div><div class="wmsg">${msg}</div>${kb}${bonus}`;
   $('#t-wd').textContent=canPlay?`попытка ${Math.min(w.g.length+1,6)}/6`:(w.status==='won'?'решён':w.status==='revealed'?'слово открыто':'не решён');
 }
@@ -1628,20 +1714,27 @@ const WDS=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
 const WDN=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
 function bRint(R,a,b){return a+Math.floor(R()*(b-a+1))}
 function wdNY(){const p=nyParts();return new Date(Date.UTC(p.y,p.m-1,p.d)).getUTCDay()}
-function bloodGet(){try{const b=JSON.parse(localStorage.getItem('fate_blood')||'null');return b&&BLOOD[b.g]?b:null}catch(e){return null}}
+function bloodGet(){try{const b=JSON.parse(localStorage.getItem('fate_blood')||'null');if(!b)return null;if(b.g==='?')return{g:'?',rh:'?',idk:true};return BLOOD[b.g]?b:null}catch(e){return null}}
 function bloodCalc(){
-  const b=bloodGet();if(!b)return null;
+  const b=bloodGet();if(!b||b.idk)return null;
   const B=BLOOD[b.g],wd=wdNY(),sign=B.sg[wd],plus=b.rh==='+';
   const base=bRint(rngFor('blood|'+b.g),B.lo,B.hi);
   const rh=plus?bRint(rngFor('bloodrh|+|'+b.g),10,50):bRint(rngFor('bloodrh|-|'+b.g),5,50);
   return{g:b.g,rh:b.rh,sign,base,rhv:rh,wd,value:sign*(base+rh)};
 }
 function rBlood(){
-  const b=bloodGet(),c=bloodCalc(),wd=wdNY();
+  const b=bloodGet(),wd=wdNY();let c=bloodCalc();
   const opt=(v,t,cur)=>`<option value="${v}"${cur===v?' selected':''}>${t}</option>`;
-  const form=`<div class="frm"><select class="sel" id="bg">${opt('','Группа…',b&&b.g)}${Object.keys(BLOOD).map(k=>opt(k,BLOOD[k].n,b&&b.g)).join('')}</select><select class="sel" id="brh">${opt('+','Rh+',b?b.rh:'+')}${opt('-','Rh−',b?b.rh:'+')}</select><button onclick="setBlood()">Применить</button></div>`;
+  const idk=!!(b&&b.idk);
+  if(idk)c=null;   /* статистика не считается и не показывается */
+  const form=`<div class="frm"><select class="sel" id="bg" onchange="bloodUi()">${opt('','Группа…',b?b.g:'')}${Object.keys(BLOOD).map(k=>opt(k,BLOOD[k].n,b&&b.g)).join('')}${opt('?','я не знаю',b?b.g:'')}</select><select class="sel" id="brh"${idk?' disabled style="opacity:.45"':''}>${opt('+','Rh+',b?b.rh:'+')}${opt('-','Rh−',b?b.rh:'+')}</select><button onclick="setBlood()">Применить</button></div>`;
   let body;
-  if(!c){
+  if(idk){
+    body=`<div class="row"><span>Сегодня</span><b>Группа не указана</b></div>
+    <div class="idk">Статистика группы не показывается: ты выбрал «я не знаю».</div>
+    <div class="pts zerov">0<small>группа крови: очков нет</small></div>
+    <div class="note">Очки за группу крови не начисляются. В итоговом расчёте это не считается ошибкой.</div>`;
+  }else if(!c){
     body='<div class="note">Выбери группу крови и резус и нажми «Применить». Пока группа не выбрана — 0 очков.</div>';
   }else{
     const B=BLOOD[c.g];
@@ -1654,13 +1747,19 @@ function rBlood(){
     <div class="note">Знак зависит от дня недели и группы. У каждой группы свой бонус.</div>`;
   }
   $('#b-blood').innerHTML=form+body;
-  $('#t-blood').textContent=c?(BLOOD[c.g].n+' Rh'+(c.rh==='+'?'+':'−')):'—';
+  $('#t-blood').textContent=idk?'я не знаю · 0':(c?(BLOOD[c.g].n+' Rh'+(c.rh==='+'?'+':'−')):'—');
 }
 function setBlood(){
   const g=$('#bg').value,rh=$('#brh').value;
-  if(!BLOOD[g]){localStorage.removeItem('fate_blood')}
+  if(g==='?')localStorage.setItem('fate_blood',JSON.stringify({g:'?',rh:'?'}));
+  else if(!BLOOD[g])localStorage.removeItem('fate_blood');
   else localStorage.setItem('fate_blood',JSON.stringify({g,rh}));
   rBlood();rResult();
+}
+/* при выборе «я не знаю» резус не нужен — блокируем его */
+function bloodUi(){
+  const g=($('#bg')||{}).value,rh=$('#brh');
+  if(rh){rh.disabled=g==='?';rh.style.opacity=g==='?'?'.45':''}
 }
 
 /* ================== НОВОЕ: ДАТА РОЖДЕНИЯ + КВАДРАТ ПИФАГОРА ================== */
@@ -1752,6 +1851,7 @@ function entries(){
   if(S.btc)add('Биткоин','BTC '+(S.btc.change>=0?'растёт':'падает'),S.btc.value);
   add('Гороскоп',SIGNS[S.horo.si].n,S.horo.value);
   S.planets.forEach(p=>add('Планеты',p.n,p.value));
+  if(S.tarot)add('Таро',S.tarot.n,S.tarot.value);
   if(S.wx){add('Погода',S.wx.wet?'Есть осадки':'Без осадков',S.wx.vPrecip);add('Ветер','Роза ветров '+dirName(S.wx.domDir),S.wx.vWind);add('Воздух','Масса '+S.wx.air.c,S.wx.vAir);add('Давление',S.wx.pTrend>=0?'Растёт':'Падает',S.wx.vPress)}
   /* гематрия считается и учитывается всегда; само слово в списке видно только после открытия в Wordle */
   if(S.wd.status==='won')add('Wordle','Решён за '+S.wd.g.length+'/6',S.wd.value);
@@ -1840,10 +1940,306 @@ function buildWindows(){
   `;
   document.head.appendChild(st);
   /* метеоры теперь живут прямо в панели гороскопа (#b-met), отдельного окна больше нет */
-  $('#w-yt').parentNode.appendChild(mkWin('orth','Православный календарь'));
+  $('#w-uz').parentNode.appendChild(mkWin('orth','Православный календарь'));   /* правая колонка, а не тройка с ютубом */
   const gr=$('#w-cosmos').parentNode;
-  const wb=mkWin('blood','Группа крови','s5');gr.appendChild(wb);
-  gr.appendChild(mkWin('birth','Дата рождения · Пифагор','s7'));
+
+  gr.appendChild(mkWin('birth','Дата рождения · Пифагор','s6'));   /* дата рождения слева, карты таро правее */
+  gr.appendChild(mkWin('tarot','Карта таро дня','s6'));
+}
+
+/* ================== КАРТА ТАРО ДНЯ ==================
+   78 карт (22 старших аркана + 56 младших), значение, категория (масть) и картинка
+   с Викисклада (колода Райдера — Уэйта, public domain). Очки: −1000…+1000. */
+const TAROT_MAJOR=[
+ ['00','Шут','Начало пути, спонтанность, шанс. Можно шагнуть в неизвестное — но без гарантий.','Старший аркан'],
+ ['01','Маг','Воля и умение. Всё нужное уже под рукой, важно начать действовать.','Старший аркан'],
+ ['02','Верховная Жрица','Интуиция и тайна. Ответ есть, но его пока не показывают вслух.','Старший аркан'],
+ ['03','Императрица','Изобилие, забота, рост. Хорошее время для творчества и вложений в себя.','Старший аркан'],
+ ['04','Император','Порядок и контроль. Побеждает дисциплина, а не импровизация.','Старший аркан'],
+ ['05','Иерофант','Опыт и правила. Стоит послушать того, кто уже проходил этот путь.','Старший аркан'],
+ ['06','Влюблённые','Выбор и союз. Решение принимается сердцем, но требует честности.','Старший аркан'],
+ ['07','Колесница','Порыв и победа. Скорость на твоей стороне — держи руль.','Старший аркан'],
+ ['08','Сила','Мягкая сила и выдержка. Терпение даёт больше, чем давление.','Старший аркан'],
+ ['09','Отшельник','Пауза и поиск смысла. Одиночество сегодня полезнее шума.','Старший аркан'],
+ ['10','Колесо Фортуны','Поворот судьбы. События меняются сами — подстраивайся.','Старший аркан'],
+ ['11','Справедливость','Баланс и последствия. Всё вернётся по заслугам.','Старший аркан'],
+ ['12','Повешенный','Остановка и смена взгляда. Иногда выгоднее отпустить, чем толкать.','Старший аркан'],
+ ['13','Смерть','Завершение цикла. Старое уходит, чтобы освободить место.','Старший аркан'],
+ ['14','Умеренность','Середина и гармония. Не спеши, найди рабочий темп.','Старший аркан'],
+ ['15','Дьявол','Соблазн и зависимость. Проверь, кто кем управляет.','Старший аркан'],
+ ['16','Башня','Обвал старого. Резко, но честно: лучше пережить сейчас, чем тянуть.','Старший аркан'],
+ ['17','Звезда','Надежда и вдохновение. После бури снова видно ориентир.','Старший аркан'],
+ ['18','Луна','Туман и тревоги. Не все факты известны, доверяй ощущениям осторожно.','Старший аркан'],
+ ['19','Солнце','Ясность и успех. День открыт и на твоей стороне.','Старший аркан'],
+ ['20','Суд','Пробуждение и итог. Пора честно оценить сделанное.','Старший аркан'],
+ ['21','Мир','Завершение и полнота. Круг замыкается — можно праздновать.','Старший аркан']
+];
+const TAROT_SUITS=[
+ {k:'w',n:'Жезлы',img:'Wands',t:'Воля · действие · энергия'},
+ {k:'c',n:'Кубки',img:'Cups',t:'Чувства · отношения · интуиция'},
+ {k:'s',n:'Мечи',img:'Swords',t:'Мысли · конфликт · правда'},
+ {k:'p',n:'Пентакли',img:'Pents',t:'Деньги · тело · результат'}
+];
+const TAROT_RANKS=['Туз','Двойка','Тройка','Четвёрка','Пятёрка','Шестёрка','Семёрка','Восьмёрка','Девятка','Десятка','Паж','Рыцарь','Королева','Король'];
+const TAROT_MEAN={
+ 'Туз':{w:'Искра и старт: новый импульс действовать.',c:'Новое чувство: влюблённость, вдохновение, открытое сердце.',s:'Проблеск истины: ясная мысль рассекает туман.',p:'Первое зерно: шанс заработать или начать дело.'},
+ 'Двойка':{w:'Развилка: выбираешь между двумя планами.',c:'Союз и взаимность: тебя слышат.',s:'Патовое равновесие: не всё решено, но и не проиграно.',p:'Жонглирование: держишь несколько дел сразу.'},
+ 'Тройка':{w:'Первый результат: дело двинулось.',c:'Праздник и дружба: хорошая компания.',s:'Боль разлуки: спор или разрыв бьёт по нервам.',p:'Первая работа в команде: навык признали.'},
+ 'Четвёрка':{w:'Праздник дома: стабильно и радостно.',c:'Скука и ревность: не принимай хорошее как должное.',s:'Отдых и пауза: нужно выспаться, а не сражаться.',p:'Стабильность: копишь, но боишься отпустить.'},
+ 'Пятёрка':{w:'Спор и трение: столкнулись лбами.',c:'Разочарование: ждал большего, чем получил.',s:'Проигрыш с потерями: не спорь ради спора.',p:'Финансовая дыра: траты больше дохода.'},
+ 'Шестёрка':{w:'Триумф и признание: тебя замечают.',c:'Ностальгия и подарок: приятные вести.',s:'Переезд и переход: уходишь от проблем.',p:'Щедрость и помощь: дают ровно столько, сколько нужно.'},
+ 'Семёрка':{w:'Оборона: удерживаешь то, что трудно защитить.',c:'Иллюзии: желаем — значит, выдаём за реальность.',s:'Хитрость: действуй умнее, а не громче.',p:'Ожидание: вложения ещё не проросли.'},
+ 'Восьмёрка':{w:'Скорость и поток: всё складывается быстро.',c:'Уход: ищешь большего, чем даёт окружение.',s:'Ограничения и ловушка: выход есть, но ближе, чем кажется.',p:'Труд: много работы, результат не сразу.'},
+ 'Девятка':{w:'Усталость и стойкость: почти финиш.',c:'Исполнение желания: комфорт и довольство.',s:'Кошмар и чувство вины: страх больше фактов.',p:'Достаток: независимость и свой сад.'},
+ 'Десятка':{w:'Неподъёмная ноша: слишком много на себя взял.',c:'Счастье близких: тепло дома.',s:'Финальный удар: худшее позади, вставай.',p:'Наследие и семья: долгая стабильность.'},
+ 'Паж':{w:'Посланник: пришло приглашение или идея.',c:'Мечтатель: чувства наивные, но искренние.',s:'Разведка: много вопросов, мало опыта.',p:'Ученик: время учиться ремеслу.'},
+ 'Рыцарь':{w:'Атака: действуешь быстро и громко.',c:'Романтика: предлагают чувство или союз.',s:'Спешка: бьёшь словом без разбора.',p:'Методичность: медленно, зато наверняка.'},
+ 'Королева':{w:'Характер: уверенность и харизма.',c:'Эмпатия: чувствуешь людей насквозь.',s:'Точность: режешь правду без жалости.',p:'Практичность: умеешь и заработать, и сэкономить.'},
+ 'Король':{w:'Лидерство: берёшь ответственность и ведёшь.',c:'Мудрость чувств: спокоен в эмоциях.',s:'Стратегия: холодный расчёт и справедливость.',p:'Хозяин: финансовая власть и опора.'}
+};
+function tarotAll(){
+  const out=TAROT_MAJOR.map(([num,n,m,cat],i)=>({key:'M'+num,num,n,mean:m,cat,img:'https://commons.wikimedia.org/wiki/Special:FilePath/RWS_Tarot_'+num+'_'+({1:'Magician',2:'High_Priestess',3:'The_Empress',4:'The_Emperor',5:'Hierophant',6:'The_Lovers',7:'The_Chariot',8:'Strength',9:'The_Hermit',10:'Wheel_of_Fortune',11:'Justice',12:'The_Hanged_Man',13:'Death',14:'Temperance',15:'The_Devil',16:'The_Tower',17:'The_Star',18:'The_Moon',19:'The_Sun',20:'Judgement',21:'World'}[i]||'Fool')+'.jpg?width=220'}));
+  TAROT_SUITS.forEach(su=>{
+    for(let r=1;r<=14;r++){
+      const name=String(r).padStart(2,'0');
+      const img='https://commons.wikimedia.org/wiki/Special:FilePath/'+su.img+name+'.jpg?width=220';
+      out.push({key:su.k+name,num:(r<=10?String(r):['','','','','','','','','','','Page','Knight','Queen','King'][r]),n:TAROT_RANKS[r-1]+' '+su.n.toLowerCase(),rank:TAROT_RANKS[r-1],suit:su.n,
+        mean:TAROT_MEAN[TAROT_RANKS[r-1]][su.k],cat:su.n+' · '+su.t,img});
+    }
+  });
+  return out;
+}
+const TAROT_ALL=tarotAll();
+function calcTarot(){
+  const c=pick(rngFor('tarot'),TAROT_ALL);
+  const pts=rngFor('tarotpts');            /* −1000…+1000 */
+  const v=Math.round((pts()*2-1)*1000);
+  return{key:c.key,n:c.n,mean:c.mean,cat:c.cat,img:c.img,num:c.num,reversed:false,value:v};
+}
+function tarotImg(box,src,name){
+  const seq=(box._seq=(box._seq||0)+1);
+  box.innerHTML=`<span class="iphl">${esc(String(name)[0]||'?')}</span>`;
+  const img=new Image();img.alt=name;img.decoding='async';
+  img.onload=()=>{if(box._seq!==seq)return;box.innerHTML='';box.appendChild(img)};
+  img.onerror=()=>{/* остаётся заглушка */};
+  img.src=src;
+}
+function rTarot(){
+  const t=S.tarot;if(!t)return;
+  const bot=$('#b-tarot');if(!bot)return;
+  bot.innerHTML=`<div class="tarot">
+    <div class="tpic" id="tpic"></div>
+    <div class="tinfo">
+      <div class="tname">${esc(t.n)}</div>
+      <div class="tcat">${esc(t.cat)}</div>
+      <div class="tmean">${esc(t.mean)}</div>
+      <div class="tsrc">Колода Райдера — Уэйта · картинка с Викисклада</div>
+    </div>
+    <div class="tpts"><div class="pts ${cls(t.value)}">${fmtP(t.value)}</div><small>очки за карту дня</small></div>
+  </div>`;
+  tarotImg($('#tpic'),t.img,t.n);
+  $('#t-tarot').textContent='Аркан '+t.num;
+}
+
+/* ================== TWITCH: ОНЛАЙН/ОФФЛАЙН (декоративно, очков не даёт) ==================
+   Публичный GQL Twitch с открытым client-id (CORS *, ключи не нужны).
+   Запасной источник — api.ivr.fi. Проверка раз в минуту. */
+const TWITCH_CHANNELS=[
+  {login:'honeymad',title:'honeymad'},
+  {login:'jerma985',title:'jerma985'},
+  {login:'sweetiefoxxx',title:'sweetiefoxxx'},
+  {login:'sasavot',title:'sasavot'}
+];
+const TWITCH_GQL='https://gql.twitch.tv/gql';
+const TWITCH_CID='kimne78kx3ncx6brgo4mv6wki5h1ko';
+let twTimer=null;
+async function twFetchJson(url,opt={},ms=9000){
+  const c=new AbortController(),to=setTimeout(()=>c.abort(),ms);
+  try{
+    const r=await fetch(url,Object.assign({},opt,{signal:c.signal}));
+    if(!r.ok)throw new Error('http '+r.status);
+    return await r.json();
+  }finally{clearTimeout(to)}
+}
+async function twitchOne(ch){
+  /* 1) публичный GQL */
+  try{
+    const q='{user(login:"'+ch.login+'"){stream{id}}}';
+    const j=await twFetchJson(TWITCH_GQL,{method:'POST',headers:{'Client-Id':TWITCH_CID,'Content-Type':'application/json'},body:JSON.stringify({query:q})});
+    const u=j&&j.data&&j.data.user;
+    if(u)return Object.assign({},ch,{live:!!u.stream,src:'gql'});
+  }catch(e){}
+  /* 2) api.ivr.fi */
+  try{
+    const j=await twFetchJson('https://api.ivr.fi/v2/twitch/user?login='+encodeURIComponent(ch.login));
+    const u=Array.isArray(j)?j[0]:null;
+    if(u)return Object.assign({},ch,{live:!!u.stream,src:'ivr'});
+  }catch(e){}
+  return Object.assign({},ch,{live:null,src:'—'});   /* статус неизвестен */
+}
+async function twitchPoll(){
+  const rows=[];
+  for(const ch of TWITCH_CHANNELS)rows.push(await twitchOne(ch));
+  S.twitch={rows,t:clock()};save();rTwitch();
+}
+function rTwitch(){
+  const bot=$('#b-twitch');if(!bot)return;
+  const t=S.twitch;
+  if(!t){bot.innerHTML='<div class="load">Проверяем эфиры…</div>';return}
+  bot.innerHTML='<div class="twrow">'+t.rows.map(r=>'<a class="twch '+(r.live===true?'on':r.live===false?'off':'unk')+'" href="https://www.twitch.tv/'+r.login+'" target="_blank" rel="noopener">'
+    +'<span class="dot"></span><span class="twlog">'+esc(r.title)+'</span>'
+    +'<span class="twst">'+(r.live===true?'в эфире':r.live===false?'офлайн':'нет данных')+'</span></a>').join('')+'</div>'
+    +'<div class="note">Проверка раз в минуту · '+t.t+' (NY).</div>';
+  const on=t.rows.filter(r=>r.live===true).length;
+  $('#t-twitch').textContent=on?('в эфире: '+on):'все офлайн';
+}
+function twitchStart(){
+  rTwitch();
+  if(twTimer)clearInterval(twTimer);
+  twitchPoll();
+  twTimer=setInterval(twitchPoll,60000);
+}
+
+/* ================== ЧАТ СТРИМА elwycco (декоративно, очков не даёт) ==================
+   Два источника сообщений одновременно:
+   1) WebSocket чата Twitch (анонимный justinfan) — мгновенно, но в некоторых сетях WSS режут;
+   2) опрос истории recent-messages.robotty.de по HTTPS — раз в 6 секунд, работает через CORS *.
+   Сообщения склеиваются и дедуплицируются по id. Офлайн → «Стример не в сети». */
+const CHAT_CHANNEL='elwycco';
+const CHAT_MAX=60;
+const CHAT_POLL_MS=6000;
+let chatWs=null,chatPollTimer=null,chatTickTimer=null,chatRetry=null;
+let chatLive=null,chatState='idle',chatMsgs=[],chatSeen=new Set(),chatTry=0,chatWsOk=false;
+function chatTags(raw){
+  const o={};String(raw||'').split(';').forEach(kv=>{const i=kv.indexOf('=');if(i>0)o[kv.slice(0,i)]=kv.slice(i+1)});return o;
+}
+function chatUnescape(txt){
+  /* в IRC экранируются пробел, двоеточие, слэш и перевод строки */
+  return String(txt||'').replace(/\\([s:n\\r])/g,(m,c)=>({'s':' ',':':';','n':'\n','r':'\n','\\':'\\'}[c]||c));
+}
+function chatBadges(t){
+  const out=[],b=t['badges']||'';
+  if(/broadcaster/.test(b))out.push('<i class="cb cb-host">стример</i>');
+  else if(t['mod']==='1')out.push('<i class="cb cb-mod">мод</i>');
+  if(/vip/.test(b))out.push('<i class="cb cb-vip">vip</i>');
+  if(t['subscriber']==='1'||/subscriber/.test(b))out.push('<i class="cb cb-sub">саб</i>');
+  return out.join('');
+}
+/* добавляем сообщение: id — для дедупликации между сокетом и опросом */
+function chatAdd(id,user,text,tags,ts){
+  id=id||((tags&&tags['id'])||'')||(user+'|'+text+'|'+ts);
+  if(chatSeen.has(id))return;
+  chatSeen.add(id);
+  if(chatSeen.size>400){const it=chatSeen.values();for(let i=0;i<150;i++)chatSeen.delete(it.next().value)}
+  chatMsgs.push({id,ts:ts||0,u:user||'—',t:chatUnescape(text),c:(tags&&tags['color'])||'',b:tags?chatBadges(tags):''});
+  chatMsgs.sort((a,b)=>a.ts-b.ts);
+  if(chatMsgs.length>CHAT_MAX)chatMsgs=chatMsgs.slice(-CHAT_MAX);
+  chatRender(true);
+}
+function chatRender(keepScroll){
+  const bot=$('#b-chat');if(!bot)return;
+  if(chatState==='offline'){
+    bot.innerHTML='<div class="chatoff">Стример не в сети</div>';
+    $('#t-chat').textContent='не в сети';return;
+  }
+  if(chatState==='loading'){bot.innerHTML='<div class="load">Проверяем эфир и подключаем чат…</div>';return}
+  const list=chatMsgs.length
+    ? chatMsgs.map(m=>`<div class="cm">${m.b}<b class="cu"${m.c?` style="color:${esc(m.c)}"`:''}>${esc(m.u)}</b><span class="ct">${esc(m.t)}</span></div>`).join('')
+    : '<div class="load">Сообщений пока нет — ждём первые строки из чата…</div>';
+  bot.innerHTML=`<div class="chatlist" id="chatlist">${list}</div>`;
+  const l=$('#chatlist');
+  if(l&&(keepScroll===true||!chatRender._init)){l.scrollTop=l.scrollHeight}
+  chatRender._init=true;
+  $('#t-chat').textContent='в эфире';
+}
+/* ---------- источник 2: история по HTTPS (работает почти везде) ---------- */
+async function chatHistoryOnce(){
+  try{
+    const r=await fetch('https://recent-messages.robotty.de/api/v2/recent-messages/'+CHAT_CHANNEL+'?limit=40',{cache:'no-store'});
+    if(!r.ok)throw new Error('http '+r.status);
+    const j=await r.json();
+    const lines=(j&&j.messages)||[];
+    lines.forEach(line=>{
+      const m=/^@([^ ]*) :([^!]+)![^ ]* PRIVMSG #[^ ]+ :(.*)$/.exec(line);
+      if(!m)return;
+      const t=chatTags(m[1]);
+      chatAdd(t['id']||'',t['display-name']||m[2],m[3],t,+t['tmi-sent-ts']||0);
+    });
+    return lines.length;
+  }catch(e){return -1}
+}
+function chatPollStart(){
+  if(chatPollTimer)return;
+  chatHistoryOnce();
+  chatPollTimer=setInterval(chatHistoryOnce,CHAT_POLL_MS);
+}
+function chatPollStop(){if(chatPollTimer){clearInterval(chatPollTimer);chatPollTimer=null}}
+/* ---------- источник 1: WebSocket ---------- */
+function chatConnect(){
+  chatClose();
+  try{
+    const ws=new WebSocket('wss://irc-ws.chat.twitch.tv:443');
+    chatWs=ws;
+    ws.onopen=()=>{
+      chatTry=0;chatWsOk=true;
+      ws.send('PASS SCHMOOPIIE');
+      ws.send('NICK justinfan'+Math.floor(10000+Math.random()*89999));
+      ws.send('JOIN #'+CHAT_CHANNEL);
+      if(chatState!=='live'){chatState='live'}
+      chatRender(false);
+    };
+    ws.onmessage=e=>{
+      const data=String(e.data);
+      if(data.startsWith('PING')){try{ws.send('PONG :tmi.twitch.tv')}catch(_){}return}
+      data.split('\r\n').forEach(line=>{
+        if(!line)return;
+        const m=/^@([^ ]*) :([^!]+)![^ ]* PRIVMSG #[^ ]+ :(.*)$/.exec(line);
+        if(!m)return;
+        const t=chatTags(m[1]);
+        chatAdd(t['id']||'',t['display-name']||m[2],m[3],t,+t['tmi-sent-ts']||Date.now());
+      });
+    };
+    ws.onclose=()=>{
+      if(chatWs!==ws)return;
+      chatWs=null;chatWsOk=false;
+      chatTry=Math.min(chatTry+1,6);
+      clearTimeout(chatRetry);
+      chatRetry=setTimeout(()=>{if(chatLive!==false)chatConnect()},Math.min(30000,3000*chatTry));
+    };
+    ws.onerror=()=>{try{ws.close()}catch(_){}};
+  }catch(e){chatWsOk=false}
+}
+function chatClose(){try{if(chatWs)chatWs.close()}catch(_){}chatWs=null;chatWsOk=false}
+/* ---------- статус эфира ---------- */
+async function chatCheckLive(){
+  try{
+    const q='{user(login:"'+CHAT_CHANNEL+'"){stream{id}}}';
+    const r=await fetch(TWITCH_GQL,{method:'POST',headers:{'Client-Id':TWITCH_CID,'Content-Type':'application/json'},body:JSON.stringify({query:q})});
+    const j=await r.json();const u=j&&j.data&&j.data.user;
+    if(u)return !!u.stream;
+  }catch(e){}
+  try{
+    const j=await(await fetch('https://api.ivr.fi/v2/twitch/user?login='+CHAT_CHANNEL)).json();
+    const u=Array.isArray(j)?j[0]:null;
+    if(u)return !!(u.stream||(u.stream===undefined&&u.displayName));
+  }catch(e){}
+  return null;
+}
+async function chatBoot(){
+  const live=await chatCheckLive();
+  chatLive=live;
+  if(live===false){chatClose();chatPollStop();chatState='offline';chatRender();return}
+  /* эфир идёт (или статус не узнать — тогда пробуем оба источника) */
+  chatState='live';
+  chatRender(false);
+  chatPollStart();
+  if(!chatWs)chatConnect();
+}
+function chatStart(){
+  if(chatTickTimer)clearInterval(chatTickTimer);
+  chatState='loading';chatRender();
+  chatBoot();
+  chatTickTimer=setInterval(chatBoot,45000);   /* начался/закончился эфир */
 }
 
 /* ================== МИГАЮЩИЕ ЗАГОЛОВКИ (связь с уведомлениями итогового расчёта) ================== */
@@ -1863,7 +2259,7 @@ function syncWinAlerts(){
   /* мигаем только пока идёт игра: решён / не решён за 6 попыток / открыт кнопкой — уведомления нет */
   markWin('wd',!!(S.wd&&S.wd.status==='play'),'Wordle не решён — бонус за решение не учтён.');
   markWin('hero',!S.pHero,'Не вписал имя — персонаж по имени не учтён.');
-  markWin('blood',!bloodGet(),'Не выбрана группа крови — её очки не учтены.');
+  markWin('blood',!bloodGet(),'Не выбрана группа крови — её очки не учтены.');   /* «я не знаю» — это выбор, шапка не мигает */
 }
 
 /* ================== ЗАПУСК ================== */
@@ -1872,12 +2268,12 @@ function renderAll(){
   $('#dateline').textContent='Нью-Йорк · '+new Date(Date.UTC(p.y,p.m-1,p.d,12)).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',weekday:'long',timeZone:'UTC'});
   $('#t-cosmos').textContent=DAY;
   wCur='';wMsg='';wRev=-1;
-  rBtc();rUz();rQuake();rHero();rPHero();rYT();rHoro();rAstro();rMet();rWx();rFish();rWordle();rGem();rItem();rRank();rTeam();rOrth();rBlood();rBirth();rResult();
+  rBtc();rUz();rQuake();rHero();rPHero();rYT();rHoro();rAstro();rMet();rWx();rFish();rWordle();rGem();rItem();rRank();rTarot();rTeam();rTwitch();rOrth();rBlood();rBirth();rResult();
   $('#pn').value=localStorage.getItem('fate_name')||'';
 }
 function startDay(){
   DAY=nyDateStr();S=load();ensureStatic();shownChance=0;renderAll();
-  fetchBtc();fetchWeather();fetchQuake();checkYT();wPoolLoad();
+  fetchBtc();fetchWeather();fetchQuake();checkYT();wPoolLoad();twitchStart();chatStart();
 }
 function tick(){
   const p=nyParts();
@@ -1909,5 +2305,5 @@ setInterval(tick,1000);
 setInterval(ytWatchdog,60*1000);
 setInterval(rAstro,10*60*1000);
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5463a018d94f2c7',t:'MTc5MzY1NDg4MQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5463a018d94f2c7',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
