@@ -103,6 +103,8 @@ h1.mega{font:900 clamp(28px,5vw,58px) Cinzel,serif;text-align:center;letter-spac
 .tin:focus{border-color:#39c6d6;box-shadow:0 0 0 2px rgba(57,198,214,.15)}
 .tin.bad{border-color:#ff5a5f;color:#ff9a9d;box-shadow:0 0 0 2px rgba(255,90,95,.16)}
 .terrtxt{color:#ff5a5f;font-weight:700}
+.wretry{margin-top:10px;padding:7px 14px;font:700 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--gold);background:rgba(230,180,94,.1);border:1px solid rgba(230,180,94,.5);border-radius:3px}
+.wretry:hover{background:rgba(230,180,94,.2)}
 /* компактный столбик в левой колонке */
 #w-team .wb{padding:12px}
 #w-team .tin{padding:3px 8px;font-size:12.5px;text-align:left}
@@ -1238,25 +1240,173 @@ function airMass(T,Td){
   return{c:'cP',n:'Континентальная полярная (прохладная, сухая)',dry:true};
 }
 const dirName=d=>['С','ССВ','СВ','ВСВ','В','ВЮВ','ЮВ','ЮЮВ','Ю','ЮЮЗ','ЮЗ','ЗЮЗ','З','ЗСЗ','СЗ','ССЗ'][Math.round(nrm(d)/22.5)%16];
+/* ================== ПОГОДА: КАСКАД ИСТОЧНИКОВ ==================
+   open-meteo → api.weather.gov (NWS) → wttr.in → api.met.no → Open-Meteo через CORS-прокси.
+   Все отдают Access-Control-Allow-Origin: *, поэтому работают прямо из файла.
+   Результат приводится к одному виду: {cur{t,td,hum,pr,code,p,ws,wd}, h{time,t,td,p,ws,wd}, idx}. */
+const WRC=[[0,0],[1,0],[2,1],[3,2],[45,3],[48,3],[51,4],[53,4],[55,4],[56,4],[57,4],[61,5],[63,5],[65,5],[66,5],[67,5],[71,6],[73,6],[75,6],[77,6],[80,7],[81,7],[82,7],[85,7],[86,7],[95,8],[96,8],[99,8]];
+const RCWMO=[0,1,2,3,3,61,63,65,80,95];
+const wmoFromCode=c=>{let out=3;for(const [r,w] of WRC){if(c>=r)out=w;else break}return out};   /* WMO/Open-Meteo/wwcode 46x/48x → наш WMO */
+const wmoFromIco=i=>RCWMO[Math.max(0,Math.min(RCWMO.length-1,i|0))]||3;                            /* weather.gov icon sct/bkn/ra/sn/tsra… */
+const wmoFromNWS=ink=>{const t=String(ink||'').toLowerCase();if(/tsra|thunder|tstm/.test(t))return 95;if(/snow|sn|blizzard/.test(t))return 73;if(/ra|showers|drizzle|rain/.test(t))return 61;if(/fog/.test(t))return 45;if(/ovc/.test(t))return 3;if(/bkn/.test(t))return 2;if(/sct/.test(t))return 1;if(/few|skc|clr/.test(t))return 0;return 3};
+const KN_TO_MS=1/3.6,MPH_TO_MS=0.44704,KT_TO_MS=0.514444,KMH_TO_MS=1/3.6;
+const wxTZ='America/New_York';
+function wxIso(t){return String(t).slice(0,13)+':00'}
+/* точка росы по температуре и влажности (формула Магнуса) */
+function dewFrom(t,rh){
+  t=+t;rh=Math.max(1,Math.min(100,+rh||60));
+  const a=17.27,b=237.7,g=Math.log(rh/100)+a*t/(b+t);
+  return b*g/(a-g);
+}   /* «2026-11-02T13:00» без пересчёта зон */
+/* fetch с жёстким таймаутом: медленный ответ не блокирует каскад */
+async function wxJson(url,opt={},ms=9000){
+  const c=new AbortController(),to=setTimeout(()=>c.abort(),ms);
+  try{
+    const r=await fetch(url,Object.assign({},opt,{signal:c.signal}));
+    if(!r.ok)throw new Error('http '+r.status);
+    return await r.json();
+  }finally{clearTimeout(to)}
+}
+function nz(v,fb=0){const n=+v;return isFinite(n)?n:fb}
+function wxDown(cv){const x=cv.getContext('2d');x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,cv.width,cv.height);x.font='600 13px Inter,sans-serif';x.fillStyle='#8a8a99';x.textAlign='left';x.fillText('☁ загрузка',8,cv.height-8)}
+
+/* 1) open-meteo */
+async function wxOpenMeteo(){
+  const url='https://api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.0060&current=temperature_2m,relative_humidity_2m,dew_point_2m,precipitation,rain,showers,snowfall,weather_code,pressure_msl,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,dew_point_2m,pressure_msl,wind_speed_10m,wind_direction_10m&wind_speed_unit=ms&timezone=America%2FNew_York&past_days=1&forecast_days=1';
+  {
+    const j=await wxJson(url);const c=j.current,h=j.hourly;if(!c||!h||!h.time)throw new Error('bad json');
+    let idx=h.time.indexOf(wxIso(c.time));if(idx<0)idx=h.time.length-1;
+    const pr=nz(c.precipitation),snow=nz(c.snowfall);
+    return{ok:true,src:'Open-Meteo',cur:{t:nz(c.temperature_2m),td:nz(c.dew_point_2m),hum:nz(c.relative_humidity_2m),pr,code:nz(c.weather_code,3),p:nz(c.pressure_msl),ws:nz(c.wind_speed_10m),wd:nz(c.wind_direction_10m)},
+      h:{time:h.time,t:h.temperature_2m,td:h.dew_point_2m,p:h.pressure_msl,ws:h.wind_speed_10m,wd:h.wind_direction_10m},
+      idx,wet:pr>0||snow>0||isWet(c.weather_code)};
+  }
+}
+/* 2) api.weather.gov (NWS, США) */
+async function wxNWS(){
+  const pts=await wxNwsFetch('https://api.weather.gov/points/40.7128,-74.0060');
+  const pt=pts.properties||{};
+  if(!pt.forecastHourly)throw new Error('no forecastHourly');
+  const [hourly,raw]=await Promise.all([wxNwsFetch(pt.forecastHourly),wxNwsFetch(pt.forecastGridData||'').catch(()=>null)]);
+  const per=(hourly&&hourly.properties&&hourly.properties.periods)||[];
+  if(per.length<3)throw new Error('bad periods');
+  const now=Date.now();
+  let idx=per.length-1;const t0=Date.parse(per[0].startTime);
+  if(t0){idx=Math.floor((now-t0)/3600000);idx=Math.max(0,Math.min(idx,per.length-1))}
+  const C=(f)=>(+f-32)*5/9;
+  const time=per.map(p=>p.startTime.slice(0,13));
+  const gv=(raw&&raw.properties)||{};
+  const val=(g,at)=>{const arr=(g||{}).values;if(!arr||!arr.length)return null;let out=arr[0].value;for(const v of arr){const st=Date.parse(String(v.validTime).split('/')[0]);if(st<=at)out=v.value;else break}return out};
+  /* давление: в суточной сетке может не быть — берём последнее доступное значение, иначе стандартное 1013 */
+  const pNow=val(gv.pressure,now),p6=val(gv.pressure,now-6*3600000);
+  const pSeries=time.map((_,i)=>val(gv.pressure,t0+(i*3600000)));
+  const pFill=pNow!=null?pNow:1013;
+  const cur0=per[idx],nv=(x)=>x==null?null:+x;
+  const dewC=nv(cur0.dewpoint&&cur0.dewpoint.value),ws=(String(cur0.windSpeed||'0').match(/\d+(\.\d+)?/)||[0])[0];
+  const wd=(String(cur0.windDirection||'').replace(/[^NSEW]/g,'').length?dirDeg(cur0.windDirection):0);
+  const tF=String(cur0.temperatureUnit)==='F';
+  const hum=nv(cur0.relativeHumidity&&cur0.relativeHumidity.value);
+  const tNow=tF?C(nv(cur0.temperature)):nv(cur0.temperature);
+  const cur={t:tNow,td:(dewC!=null?dewC:dewFrom(tNow,hum)),hum,
+    pr:0,code:wmoFromNWS(cur0.icon||cur0.shortForecast),p:pFill,ws:ws*MPH_TO_MS,wd,pApprox:pNow==null};
+  const H={time,t:[],td:[],p:[],ws:[],wd:[]};
+  per.forEach((p,i)=>{
+    const tempC=String(p.temperatureUnit)==='F'?C(p.temperature):nz(p.temperature);
+    H.t.push(tempC);
+    const dd=gv.dewpoint?val(gv.dewpoint,Date.parse(p.startTime)):null;
+    H.td.push(dd!=null?dd:(dewC!=null?dewC:dewFrom(tempC,nv(p.relativeHumidity&&p.relativeHumidity.value))))
+    const pp=gv.pressure?val(gv.pressure,Date.parse(p.startTime)):null;
+    H.p.push(pp!=null?pp:pFill);
+    H.ws.push((parseFloat(String(p.windSpeed||'0').match(/\d+(\.\d+)?/)?.[0]||0))*MPH_TO_MS);
+    H.wd.push(p.windDirection?dirDeg(p.windDirection):0);
+  });
+  const wet=isWet(cur.code)||(cur0.probabilityOfPrecipitation&&(cur0.probabilityOfPrecipitation.value||0)>=55);
+  return{ok:true,src:'NWS',cur,h:H,idx,wet};
+}
+async function wxNwsFetch(u){if(!u)throw new Error('no url');return await wxJson(u,{headers:{Accept:'application/geo+json'}})}
+function dirDeg(t){
+  const m={N:0,NNE:22.5,NE:45,ENE:67.5,E:90,ESE:112.5,SE:135,SSE:157.5,S:180,SSW:202.5,SW:225,WSW:247.5,W:270,WNW:292.5,NW:315,NNW:337.5};
+  const k=String(t||'').toUpperCase();if(m[k]!=null)return m[k];
+  if(/^[NSEW]{1,3}$/.test(k)){let a=0;for(const ch of k)a+={N:0,E:90,S:180,W:270}[ch]||0;return a/k.length}
+  const n=parseFloat(t);return isFinite(n)?n:0;
+}
+/* 3) wttr.in */
+async function wxWttr(){
+  const j=await wxJson('https://wttr.in/New%20York?format=j1');const c=(j.current_condition||[])[0];if(!c)throw new Error('bad json');
+  const hours=[];(j.weather||[]).slice(0,2).forEach(d=>{const dt=d.date;String(dt).replace(/-/g,'');(d.hourly||[]).forEach(h=>{const hh=String(h.time).padStart(4,'0');hours.push({iso:dt+'T'+hh.slice(0,2)+':00',tm:+h.tempC,dp:isFinite(+h.DewPointC)?+h.DewPointC:dewFrom(+h.tempC,+h.humidity),pr:+h.pressure,ws:(+h.windspeedKmph)*KMH_TO_MS,wd:+h.winddirDegree,rain:+h.precipMM,code:+h.weatherCode})})});
+  if(hours.length<3)throw new Error('bad hourly');
+  const now=new Date();
+  /* время в wttr — локальное для города; сравниваем «ЧЧ» с текущим нью-йоркским часом */
+  const nyh=+new Intl.DateTimeFormat('en-GB',{timeZone:wxTZ,hour:'2-digit',hour12:false}).format(now);
+  let idx=hours.findIndex(x=>+x.iso.slice(11,13)===nyh);if(idx<0)idx=Math.min(hours.length-1,12);
+  const cur={t:+c.temp_C,td:isFinite(+c.DewPointC)?+c.DewPointC:dewFrom(+c.temp_C,+c.humidity),hum:+c.humidity,pr:+c.precipMM,code:wmoFromCode(+c.weatherCode),p:+c.pressure,ws:(+c.windspeedKmph)*KMH_TO_MS,wd:+c.winddirDegree};
+  return{ok:true,src:'wttr.in',cur,h:{time:hours.map(x=>x.iso),t:hours.map(x=>x.tm),td:hours.map(x=>x.dp),p:hours.map(x=>x.pr),ws:hours.map(x=>x.ws),wd:hours.map(x=>x.wd)},idx,wet:isWet(cur.code)||cur.pr>0};
+}
+/* 4) api.met.no */
+async function wxMetNo(){
+  const j=await wxJson('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=40.7128&lon=-74.006',{headers:{Accept:'application/json'}});
+  const ts=(j.properties&&j.properties.timeseries)||[];if(ts.length<3)throw new Error('bad json');
+  const now=Date.now();let idx=0;ts.forEach((e,i)=>{if(Date.parse(e.time)<=now)idx=i});
+  const D=e=>e.data.instant.details;
+  const d0=D(ts[idx]);
+  const cur={t:nz(d0.air_temperature),td:dewFrom(nz(d0.air_temperature),nz(d0.relative_humidity,50)),hum:nz(d0.relative_humidity),pr:nz(((ts[idx].data.next_1_hours||{}).details||{}).precipitation_amount),code:3,p:nz(d0.air_pressure_at_sea_level,1013),ws:nz(d0.wind_speed),wd:nz(d0.wind_from_direction)};
+  const h={time:[],t:[],td:[],p:[],ws:[],wd:[]};
+  ts.slice(0,Math.max(4,idx+25)).forEach(e=>{const d=D(e);h.time.push(e.time.slice(0,13));h.t.push(nz(d.air_temperature));h.td.push(dewFrom(nz(d.air_temperature),nz(d.relative_humidity,50)));h.p.push(nz(d.air_pressure_at_sea_level,1013));h.ws.push(nz(d.wind_speed));h.wd.push(nz(d.wind_from_direction))});
+  return{ok:true,src:'met.no',cur,h,idx:Math.min(idx,h.time.length-1),wet:cur.pr>0};
+}
+/* 5) последний шанс: тот же Open-Meteo через CORS-прокси */
+async function wxProxy(){
+  const url='https://api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.0060&current=temperature_2m,relative_humidity_2m,dew_point_2m,precipitation,rain,showers,snowfall,weather_code,pressure_msl,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,dew_point_2m,pressure_msl,wind_speed_10m,wind_direction_10m&wind_speed_unit=ms&timezone=America%2FNew_York&past_days=1&forecast_days=1';
+  const P=[u=>'https://api.cors.lol/?url='+encodeURIComponent(u),u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u)];
+  let last=null;
+  for(const f of P){
+    try{
+      const j=await wxJson(f(url),{},12000);
+      const c=j.current,h=j.hourly;if(!c||!h)throw new Error('bad json');
+      let idx=h.time.indexOf(wxIso(c.time));if(idx<0)idx=h.time.length-1;
+      return{ok:true,src:'Open-Meteo · прокси',cur:{t:nz(c.temperature_2m),td:nz(c.dew_point_2m),hum:nz(c.relative_humidity_2m),pr:nz(c.precipitation),code:nz(c.weather_code,3),p:nz(c.pressure_msl),ws:nz(c.wind_speed_10m),wd:nz(c.wind_direction_10m)},
+        h:{time:h.time,t:h.temperature_2m,td:h.dew_point_2m,p:h.pressure_msl,ws:h.wind_speed_10m,wd:h.wind_direction_10m},idx,wet:nz(c.precipitation)>0||isWet(c.weather_code)};
+    }catch(e){last=e}
+  }
+  throw last||new Error('proxy failed');
+}
+/* общий приём: производные значения и очки */
+function wxAccept(o){
+  const cur=o.cur,h=o.h;
+  /* точки рядов приводим к числам (метеостанции иногда отдают строки/null) */
+  ['t','td','p','ws','wd'].forEach(k=>{h[k]=(h[k]||[]).map(x=>{const n=parseFloat(x);return isFinite(n)?n:(k==='p'?1013:0)})});
+  const idx=Math.max(0,Math.min(o.idx|0,(h.time.length||1)-1));
+  const bins=new Array(16).fill(0);for(let i=0;i<=idx;i++){const b=Math.round(nrm(h.wd[i])/22.5)%16;bins[b]++}
+  const domBin=bins.indexOf(Math.max(...bins)),domDir=domBin*22.5;
+  const offshore=Math.cos((domDir-315)*rad)>0;
+  const air=airMass(cur.t,cur.td);
+  const p0=h.p[Math.max(0,idx-6)],pTrend=cur.p-p0;
+  /* очки: значение 0…1000, знак — по условию (как было в исходнике) */
+  const R=rngFor('wx');
+  const sg=ok=>{const v=Math.round(R()*1000);return ok?(v||1):(v?-v:0)};
+  S.wx={cur,h,idx,wet:!!o.wet,domDir,offshore,air,pTrend,
+    vPrecip:sg(!o.wet),vWind:sg(offshore),vAir:sg(air.dry),vPress:sg(pTrend>=0),
+    t:clock(),src:o.src||'Open-Meteo'};
+  save();rWx();rResult();
+}
 async function fetchWeather(){
   if(S.wx)return;
-  try{
-    const url='https://api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.0060&current=temperature_2m,relative_humidity_2m,dew_point_2m,precipitation,rain,showers,snowfall,weather_code,pressure_msl,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,dew_point_2m,pressure_msl,wind_speed_10m,wind_direction_10m&wind_speed_unit=ms&timezone=America%2FNew_York&past_days=1&forecast_days=1';
-    const j=await(await fetch(url)).json();const c=j.current,h=j.hourly;
-    let idx=h.time.indexOf(c.time.slice(0,13)+':00');if(idx<0)idx=h.time.length-1;
-    const wet=(c.precipitation>0)||(c.rain>0)||(c.showers>0)||(c.snowfall>0)||isWet(c.weather_code);
-    const bins=new Array(16).fill(0);for(let i=0;i<=idx;i++){const b=Math.round(nrm(h.wind_direction_10m[i])/22.5)%16;bins[b]++}
-    const domBin=bins.indexOf(Math.max(...bins)),domDir=domBin*22.5;
-    const offshore=Math.cos((domDir-315)*rad)>0;
-    const air=airMass(c.temperature_2m,c.dew_point_2m);
-    const p0=h.pressure_msl[Math.max(0,idx-6)],pTrend=c.pressure_msl-p0;
-    const R=rngFor('wx');const m=()=>Math.round(R()*1000);const sg=(ok)=>{const v=m();return ok?v:(v?-v:0)};
-    S.wx={cur:{t:c.temperature_2m,td:c.dew_point_2m,hum:c.relative_humidity_2m,pr:c.precipitation,code:c.weather_code,p:c.pressure_msl,ws:c.wind_speed_10m,wd:c.wind_direction_10m},
-      h:{time:h.time,t:h.temperature_2m,td:h.dew_point_2m,p:h.pressure_msl,ws:h.wind_speed_10m,wd:h.wind_direction_10m},idx,wet,domDir,offshore,air,pTrend,
-      vPrecip:sg(!wet),vWind:sg(offshore),vAir:sg(air.dry),vPress:sg(pTrend>=0),t:clock()};
-    save();rWx();rResult();
-  }catch(e){$('#b-wx').innerHTML='<div class="load">Не удалось получить погоду Нью-Йорка. Повтор через минуту…</div>';setTimeout(fetchWeather,60000)}
+  if(!$('#b-wx')){setTimeout(()=>{if(!S.wx)fetchWeather()},300);return}
+  const chain=[['Open-Meteo',wxOpenMeteo],['api.weather.gov',wxNWS],['wttr.in',wxWttr],['met.no',wxMetNo],['CORS-прокси',wxProxy]];
+  for(let i=0;i<chain.length;i++){
+    const [name,fn]=chain[i];
+    try{
+      const el=$('#b-wx');if(el&&!S.wx)el.innerHTML=`<div class="load">Погода: источник ${i+1} из ${chain.length} — ${name}…</div>`;
+      const o=await fn();
+      if(o&&o.ok){wxAccept(o);return}
+    }catch(e){/* тихо пробуем следующий */}
+  }
+  $('#b-wx').innerHTML='<div class="load">Все источники погоды недоступны. Повтор через минуту…'+
+    '<br><button type="button" class="wretry" onclick="retryWeather()">Попробовать снова</button></div>';
+  setTimeout(()=>{if(!S.wx)fetchWeather()},60000);
 }
+function retryWeather(){S.wx=null;save();$('#b-wx').innerHTML='<div class="load">Загрузка погоды Нью-Йорка…</div>';fetchWeather()}
+
 function lineChart(series,times,nowIdx,w=340,h=190){
   const P={l:38,r:8,t:10,b:20};const all=series.flatMap(s=>s.data);let mn=Math.min(...all),mx=Math.max(...all);if(mx-mn<2){mx+=1;mn-=1}const pd=(mx-mn)*.12;mn-=pd;mx+=pd;
   const n=times.length,X=i=>P.l+(w-P.l-P.r)*i/(n-1),Y=v=>P.t+(h-P.t-P.b)*(1-(v-mn)/(mx-mn));const dec=(mx-mn)<8?1:0;
@@ -1301,8 +1451,8 @@ function rWx(){
     <div class="legend"><span><i style="background:#ff9e5a"></i>Температура °C</span><span><i style="background:#6ec6ff"></i>Точка росы °C</span></div>
     <div class="cv">Тип: <b>${w.air.c}</b> — ${w.air.n}</div>${v(w.vAir,w.air.dry?'сухая масса: плюс':'влажная масса: минус')}</div>
    <div class="wc"><h4>Давление воздуха · гПа</h4>${lineChart([{data:h.p,c:'#b79bff'}],h.time,w.idx)}
-    <div class="cv">Сейчас: <b>${c.p.toFixed(0)} гПа</b> (${(c.p*0.75006).toFixed(0)} мм рт. ст.) · за 6ч: <b class="${w.pTrend>=0?'pos':'neg'}">${w.pTrend>=0?'▲':'▼'} ${Math.abs(w.pTrend).toFixed(1)}</b></div>${v(w.vPress,w.pTrend>=0?'давление растёт: плюс':'давление падает: минус')}</div>
-  </div><div class="note">Данные Open-Meteo, фиксируются в ${w.t} (NY). Графики показывают 48 часов: вчера и сегодня.</div>`;
+    <div class="cv">Сейчас: <b>${c.p.toFixed(0)} гПа</b> (${(c.p*0.75006).toFixed(0)} мм рт. ст.) · за 6ч: <b class="${w.pTrend>=0?'pos':'neg'}">${w.pTrend>=0?'▲':'▼'} ${Math.abs(w.pTrend).toFixed(1)}</b>${w.pApprox?' <span class="muted">· источник давление не отдаёт, показано стандартное</span>':''}</div>${v(w.vPress,w.pTrend>=0?'давление растёт: плюс':'давление падает: минус')}</div>
+  </div><div class="note">Данные ${w.src||'Open-Meteo'}, фиксируются в ${w.t} (NY). Если источник недоступен, страница сама берёт следующий по цепочке: api.weather.gov → wttr.in → met.no → CORS-прокси.</div>`;
   $('#t-wx').textContent='Нью-Йорк · '+w.t;
 }
 
@@ -1759,5 +1909,5 @@ setInterval(tick,1000);
 setInterval(ytWatchdog,60*1000);
 setInterval(rAstro,10*60*1000);
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a542c9c4d859dcd0',t:'MTc5MzYxODgyNw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a542c9c4d859dcd0',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
