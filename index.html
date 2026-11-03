@@ -158,6 +158,12 @@ h1.mega{font:900 clamp(28px,5vw,58px) Cinzel,serif;text-align:center;letter-spac
 .cb-sub{background:rgba(145,71,255,.2);color:#b79bff}
 .cm .cu{flex:none;font-weight:700}
 .cm .ct{min-width:0;word-break:break-word;color:var(--text)}
+/* персонаж по имени: подпись и пояснение по знаку очков */
+.pcap{margin:10px 0 2px;font:600 12.5px Inter,sans-serif;color:var(--muted)}
+.pcap i{font-style:normal;font-weight:800}
+.posword{color:#8fe6b0}
+.negword{color:#ff9a9d}
+.pnote{margin-top:8px;font:600 12px Inter,sans-serif;line-height:1.45;text-align:center}
 .chatoff{padding:22px 10px;text-align:center;font:700 18px Cinzel,serif;letter-spacing:.06em;color:var(--muted);border:1px dashed #3a3a4c;border-radius:4px}
 #w-chat .wb{min-height:0}
 .trio .chatlist{flex:1;max-height:none;min-height:150px;padding:8px 10px;overflow-x:hidden}
@@ -282,6 +288,8 @@ input:focus{border-color:var(--gold2)}
 .ch:before{content:"";width:5px;height:5px;background:var(--gold);transform:rotate(45deg)}
 .ch span{margin-left:auto;color:var(--muted);font:500 11px Inter;letter-spacing:.03em;text-transform:none}
 #mcv{width:100%;height:130px;display:block;background:radial-gradient(ellipse at 50% 120%,#1b1633,#07070b);border:1px solid var(--line);border-radius:4px}
+.htext.online{font-size:12.5px;line-height:1.5}
+.hsrc{margin:-4px 0 8px;font:600 10.5px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#5b5b69}
 .hsign{display:flex;align-items:center;gap:16px;margin-bottom:12px}
 .hsign .gl{font:400 60px/1 serif;color:var(--gold);text-shadow:0 0 24px rgba(230,180,94,.5)}
 .hsign h3{font:900 24px Cinzel,serif;color:#fff;letter-spacing:.06em}
@@ -428,7 +436,6 @@ footer{text-align:center;color:#5d5b68;font-size:12px;padding:10px 20px 40px}
   <aside class="col">
     <section class="win" id="w-hero"><div class="wt"><span class="wtalert"></span><i></i>Герой дня · Deadlock<span class="tag" id="t-hero"></span></div>
       <div class="wb">
-        <div class="hlabel">Наилучший персонаж на сегодня</div>
         <div id="b-hero"></div>
         <div class="hsep"></div>
         <div class="hlabel">Твой персонаж по имени</div>
@@ -684,7 +691,7 @@ function calcPHero(name){
   return{name,hero,value,best};
 }
 function ensureStatic(){
-  if(!S.horo){const R=rngFor('horo');const si=Math.floor(R()*12);S.horo={si,text:[pick(R,HA),pick(R,HB),pick(R,HC)].join(' '),fact:pick(R,FACTS),value:rv(R)}}
+  if(!S.horo){const R=rngFor('horo');const si=Math.floor(R()*12);S.horo={si,text:[pick(R,HA),pick(R,HB),pick(R,HC)].join(' '),fact:pick(R,FACTS),value:rv(R),online:null,src:''}}
   if(!S.planets){S.planets=PLANETS.map(p=>{const R=rngFor('pl_'+p.k);return{k:p.k,n:p.n,value:Math.round((R()*2-1)*PLANET_MAX)}})}
   if(!S.hero){const R=rngFor('hero');S.hero={name:pick(R,HEROES.filter(h=>!BAD_HEROES.includes(h)))}}
   if(!S.uz){S.uz={s:Math.floor(rngFor('uz')()*UZ.length)}}
@@ -1061,7 +1068,7 @@ async function fillHeroImg(box,name){
 }
 async function rHero(){
   const name=S.hero.name;
-  $('#b-hero').innerHTML=`<div class="hero"><div class="img" id="himg">${phHtml(name)}</div><h3>${name}</h3><p id="hrole">Лучший выбор дня для всех</p></div>`;
+  $('#b-hero').innerHTML=`<div class="hero"><div class="img" id="himg">${phHtml(name)}</div><h3>${name}</h3><p id="hrole"></p></div>`;
   $('#t-hero').textContent=DAY;
   const h=await fillHeroImg($('#himg'),name);
   const role=h&&h.description&&h.description.role;if(role&&$('#hrole'))$('#hrole').textContent=role;
@@ -1070,8 +1077,15 @@ async function rPHero(){
   const p=S.pHero,el=$('#pres');
   if(!p){el.innerHTML='<div class="note">Впиши имя — получишь своего персонажа на сегодня. Он добавит или отнимет очки. Бибоп, Рем и Аполло — проклятые герои: они всегда отнимают от −500 до −1000.</div>';return}
   const bad=BAD_HEROES.includes(p.hero);
-  el.innerHTML=`<div class="phero"><div class="pimg" id="pimg">${phHtml(p.hero)}</div><div><small>${esc(p.name)}, сегодня твой герой:</small><h3>${p.hero}</h3><small id="prole"></small></div></div>
-  <div class="pts ${cls(p.value)}">${fmtP(p.value)}${bad?'<small>проклятый герой</small>':''}</div>`;
+  /* 0 считаем положительным: «отрицательный герой» только при минусе */
+  const neg=p.value<0,word=neg?['положительный','отрицательный']:['положительный','положительный'];
+  const caption=`сегодня твой <i class="${neg?'negword':'posword'}">${neg?'отрицательный':'положительный'}</i> герой`;
+  const line=neg
+    ?'С этим героем будет связан ряд странностей или неудач'
+    :'Этот герой окажет хорошее влияние на игру';
+  el.innerHTML=`<div class="phero"><div class="pimg" id="pimg">${phHtml(p.hero)}</div><div><small>${esc(p.name)}, ${caption}:</small><h3>${p.hero}</h3><small id="prole"></small></div></div>
+  <div class="pts ${cls(p.value)}">${fmtP(p.value)}${bad?'<small>проклятый герой</small>':''}</div>
+  <div class="pnote ${neg?'negword':'posword'}">${line}</div>`;
   const h=await fillHeroImg($('#pimg'),p.hero);
   const role=h&&h.description&&h.description.role;if(role&&$('#prole'))$('#prole').textContent=role;
 }
@@ -1227,9 +1241,11 @@ function ytWatchdog(){
 function rHoro(){
   const h=S.horo,s=SIGNS[h.si];
   const th=$('#t-horo');if(th)th.textContent=SIGNS[h.si].n;   // тег есть только у отдельного окна
+  const on=h.online,src=on?('онлайн'+(on.date?' · '+on.date:'')+(on.lang==='en'?' · EN':' · перевод')):'локальный текст';
   $('#b-horo').innerHTML=`<div class="ch">Гороскоп дня<span>${s.n} · ${DAY}</span></div>
   <div class="hsign"><div class="gl" style="color:${s.el}">${s.g}${VS}</div><div><h3>${s.n}</h3><small>${s.d} · ${s.e}</small></div></div>
-  <div class="htext">${h.text}</div>
+  <div class="htext${on?' online':''}">${esc(on?on.text:h.text)}</div>
+  <div class="hsrc">${src}</div>
   <div class="fact"><b>ФАКТ ДНЯ</b>${h.fact}</div>
   <div class="pts ${cls(h.value)}">${fmtP(h.value)}</div>`;
 }
@@ -2242,6 +2258,73 @@ function chatStart(){
   chatTickTimer=setInterval(chatBoot,45000);   /* начался/закончился эфир */
 }
 
+/* ================== ОНЛАЙН-ГОРОСКОП ==================
+   freehoroscopeapi.com — открытый HTTPS-API с CORS *, без ключа.
+   Знак и очки остаются прежними (их выбирает локальная логика дня),
+   из сети берётся только текст гороскопа на сегодня. Если сеть недоступна —
+   остаётся встроенный текст, а в подписи честно пишется, что он локальный. */
+const HORO_API='https://freehoroscopeapi.com/api/v1/get-horoscope/daily?sign=';
+const HORO_SIGNS=['aries','taurus','gemini','cancer','leo','virgo','libra','scorpio','sagittarius','capricorn','aquarius','pisces'];
+/* русский текст: API англоязычный, поэтому переводим MyMemory (CORS *, без ключа) */
+const HORO_TR='https://api.mymemory.translated.net/get';
+function ent(t){return String(t).replace(/&quot;/g,'"').replace(/&#0?39;|&#x27;|&apos;/g,"'").replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ')}
+function horoSplit(t){
+  const out=[];let rest=String(t).replace(/\s+/g,' ').trim();
+  while(rest.length>440){
+    const cut=rest.slice(0,440);
+    let i=Math.max(cut.lastIndexOf('. '),cut.lastIndexOf('! '),cut.lastIndexOf('? '));
+    if(i<140)i=cut.lastIndexOf(' ');
+    if(i<140)i=439;
+    out.push(rest.slice(0,i+1).trim());rest=rest.slice(i+1).trim();
+  }
+  if(rest)out.push(rest);return out;
+}
+async function horoTranslate(txt){
+  const parts=horoSplit(txt),out=[];
+  for(const p of parts){
+    const c=new AbortController(),to=setTimeout(()=>c.abort(),8000);
+    let j;
+    try{
+      const r=await fetch(HORO_TR+'?q='+encodeURIComponent(p)+'&langpair='+encodeURIComponent('en|ru'),{signal:c.signal});
+      if(!r.ok)throw new Error('tr http '+r.status);
+      j=await r.json();
+    }finally{clearTimeout(to)}
+    const rd=j&&j.responseData,t=rd&&rd.translatedText;
+    if(!t||(j.responseStatus&&+j.responseStatus!==200))throw new Error('tr bad');
+    out.push(ent(t));
+  }
+  return out.join(' ');
+}
+async function horoFetch(){
+  if(!S.horo)return;
+  const key=HORO_SIGNS[((S.horo.si|0)%12+12)%12];
+  let en='',date='';
+  try{
+    const c=new AbortController(),to=setTimeout(()=>c.abort(),9000);
+    let j;
+    try{
+      const r=await fetch(HORO_API+key,{signal:c.signal});
+      if(!r.ok)throw new Error('http '+r.status);
+      j=await r.json();
+    }finally{clearTimeout(to)}
+    const d=j&&j.data;
+    if(!d||!d.horoscope||String(d.horoscope).length<40)throw new Error('bad json');
+    en=String(d.horoscope).replace(/\s+/g,' ').trim();date=d.date||'';
+  }catch(e){
+    if(S.horo&&!S.horo.online){S.horo.src=S.horo.src||'локальный текст';rHoro()}
+    return;
+  }
+  /* сразу показываем оригинал, затем подменяем переводом */
+  S.horo.online={text:en,date,lang:'en'};S.horo.src='FreeHoroscopeAPI';
+  save();rHoro();
+  try{
+    const ru=await horoTranslate(en);
+    if(ru&&ru.length>40){S.horo.online={text:ru,date,lang:'ru'};save();rHoro()}
+  }catch(e){
+    /* перевод не удался — остаётся английский оригинал */
+  }
+}
+function horoStart(){horoFetch()}
 /* ================== МИГАЮЩИЕ ЗАГОЛОВКИ (связь с уведомлениями итогового расчёта) ================== */
 /* Wordle не решён · не вписан персонаж · не выбрана группа крови → шапка окна мигает жёлтым с ⚠ */
 function markWin(id,on,warn){
@@ -2273,7 +2356,7 @@ function renderAll(){
 }
 function startDay(){
   DAY=nyDateStr();S=load();ensureStatic();shownChance=0;renderAll();
-  fetchBtc();fetchWeather();fetchQuake();checkYT();wPoolLoad();twitchStart();chatStart();
+  fetchBtc();fetchWeather();fetchQuake();checkYT();wPoolLoad();twitchStart();chatStart();horoStart();
 }
 function tick(){
   const p=nyParts();
@@ -2305,5 +2388,5 @@ setInterval(tick,1000);
 setInterval(ytWatchdog,60*1000);
 setInterval(rAstro,10*60*1000);
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5463a018d94f2c7',t:'MTc5MzY1NDg4MQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5463a018d94f2c7',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a549c4c4498cd2a0',t:'MTc5MzY5MjAyMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a549c4c4498cd2a0',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
