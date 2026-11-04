@@ -44,8 +44,11 @@ h1.mega{font:900 clamp(28px,5vw,58px) Cinzel,serif;text-align:center;letter-spac
 @keyframes wtBlink{0%,100%{opacity:1}50%{opacity:.15}}
 @keyframes wtHeadPulse{0%,100%{box-shadow:inset 0 0 0 0 rgba(255,207,92,0)}50%{box-shadow:inset 0 0 26px rgba(255,207,92,.16)}}
 @media(prefers-reduced-motion:reduce){.wt>.wtalert,.win.alertwarn .wt{animation:none}}
+.wt .tag .ytgain{color:#5fd38d;font:700 11px Inter;letter-spacing:.04em}
 .wt .tag{margin-left:auto;font:500 11px Inter;letter-spacing:.04em;color:var(--muted);text-transform:none;white-space:nowrap;flex:none}
 .win.alertwarn .wt{gap:7px;padding-left:13px;padding-right:13px}
+/* ⚠ не должен менять высоту шапки: место под него занято всегда */
+.wt>.wtalert{min-height:18px;margin:-2px 0}
 .wb{padding:16px}
 .pos{color:var(--pos)}.neg{color:var(--neg)}.zero{color:var(--muted)}
 .big{font:700 30px Cinzel,serif;letter-spacing:.03em}
@@ -171,24 +174,25 @@ h1.mega{font:900 clamp(28px,5vw,58px) Cinzel,serif;text-align:center;letter-spac
 .trio .cm .ct{flex:1 1 100%;min-width:0;overflow-wrap:anywhere}
 .trio .chatlist .cu{font-size:12px;max-width:100%;overflow-wrap:anywhere}
 /* карта таро дня */
-.tarot{display:grid;grid-template-columns:112px minmax(0,1fr) 210px;gap:18px;align-items:start}
+.tarot{display:grid;grid-template-columns:78px minmax(0,1fr) 122px;gap:11px;align-items:start}
 .tpts{align-self:stretch;display:flex;flex-direction:column;justify-content:center}
-.tpts .pts{margin:0;font-size:34px;padding:16px 10px}
-.tpts small{display:block;margin-top:8px;text-align:center;font:600 11px Inter,sans-serif;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
-.tsrc{margin-top:10px;font:500 11px Inter,sans-serif;color:#5b5b69}
-.tpic{flex:none;width:112px;height:180px;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:#0c0c11;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 22px rgba(0,0,0,.45)}
+.tpts .pts{margin:0;font-size:20px;padding:8px 6px}
+.tpts small{display:none}
+.tsrc{display:none}
+.tpic{flex:none;width:78px;height:125px;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:#0c0c11;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.4)}
 .tpic img{width:100%;height:100%;object-fit:cover;display:block}
-.tpic .iphl{font:900 34px Cinzel,serif;color:#2e2e3c}
+.tpic .iphl{font:900 22px Cinzel,serif;color:#2e2e3c}
 .tinfo{min-width:0}
-.tname{margin:0 0 4px;font:700 20px Cinzel,serif;color:var(--gold);letter-spacing:.02em}
-.tcat{margin-bottom:8px;font:600 12px Inter,sans-serif;color:var(--muted);letter-spacing:.04em}
-.tmean{font-size:13.5px;line-height:1.5;color:var(--text)}
+.tname{margin:0 0 2px;font:700 14.5px Cinzel,serif;color:var(--gold);letter-spacing:.02em}
+.tcat{margin-bottom:4px;font:600 10.5px Inter,sans-serif;color:var(--muted);letter-spacing:.04em}
+.tmean{font-size:11.5px;line-height:1.42;color:var(--text)}
+.tsec #b-tarot{padding:0}
 @media(max-width:720px){
-  .tarot{grid-template-columns:96px minmax(0,1fr);gap:12px}
-  .tpic{width:96px;height:154px}
-  .tname{font-size:17px}.tmean{font-size:12.5px}
+  .tarot{grid-template-columns:60px minmax(0,1fr);gap:10px}
+  .tpic{width:60px;height:96px}
+  .tname{font-size:14px}.tmean{font-size:11.5px}
   .tpts{grid-column:1/-1}
-  .tpts .pts{font-size:26px;padding:10px}
+  .tpts .pts{font-size:18px;padding:7px}
 }
 /* компактный столбик в левой колонке */
 #w-team .wb{padding:12px}
@@ -258,6 +262,12 @@ input:focus{border-color:var(--gold2)}
 .ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font:900 90px Cinzel,serif;color:rgba(255,255,255,.85)}
 .ph small{font:600 12px Inter;letter-spacing:.2em;text-transform:uppercase;margin-top:6px}
 .pimg .ph{font-size:30px}.pimg .ph small{display:none}
+.hero .phq{font-size:74px;line-height:1;color:rgba(230,180,94,.34);text-shadow:0 0 26px rgba(230,180,94,.18)}
+.pimg .phq{font-size:34px}
+.pimg.empty{border-style:dashed;border-color:rgba(230,180,94,.45);background:#0b0b11;display:flex;align-items:center;justify-content:center}
+#pres{display:flex;flex-direction:column}
+.phero.pempty{flex:1 1 auto;align-items:center}
+.phero.pempty .pimg{height:auto;aspect-ratio:auto;align-self:stretch;min-height:93px}
 .phero{display:flex;gap:12px;align-items:center;margin-top:12px}
 .pimg{width:70px;flex:none;aspect-ratio:3/4;border:1px solid var(--gold2);border-radius:4px;overflow:hidden;background:#0c0c11}
 .phero h3{font:900 20px Cinzel,serif;color:#fff;letter-spacing:.05em}
@@ -383,7 +393,7 @@ footer{text-align:center;color:#5d5b68;font-size:12px;padding:10px 20px 40px}
     <section class="win" id="w-team"><div class="wt"><i></i>Шанс победы на команду<span class="tag" id="t-team"></span></div><div class="wb" id="b-team"></div></section>
     <section class="win" id="w-blood"><div class="wt"><span class="wtalert"></span><i></i>Группа крови<span class="tag" id="t-blood"></span></div><div class="wb" id="b-blood"></div></section>
     <section class="win" id="w-btc"><div class="wt"><i></i>Курс биткоина<span class="tag" id="t-btc"></span></div><div class="wb" id="b-btc"></div></section>
-    <section class="win" id="w-quake"><div class="wt"><i></i>Сейсмомонитор · зона Нью-Йорка<span class="tag" id="t-quake"></span></div><div class="wb" id="b-quake"></div></section>
+    <section class="win" id="w-quake"><div class="wt"><i></i>Сейсмомонитор · Нью-Йорк<span class="tag" id="t-quake"></span></div><div class="wb" id="b-quake"></div></section>
   </aside>
 
   <section class="center">
@@ -434,7 +444,7 @@ footer{text-align:center;color:#5d5b68;font-size:12px;padding:10px 20px 40px}
   </section>
 
   <aside class="col">
-    <section class="win" id="w-hero"><div class="wt"><span class="wtalert"></span><i></i>Герой дня · Deadlock<span class="tag" id="t-hero"></span></div>
+    <section class="win" id="w-hero"><div class="wt"><span class="wtalert"></span><i></i>Герой дня<span class="tag" id="t-hero"></span></div>
       <div class="wb">
         <div id="b-hero"></div>
         <div class="hsep"></div>
@@ -453,7 +463,7 @@ footer{text-align:center;color:#5d5b68;font-size:12px;padding:10px 20px 40px}
   </section>
   <section class="win s5" id="w-fish"><div class="wt"><i></i>Календарь ловли рыбака<span class="tag" id="t-fish"></span></div><div class="wb" id="b-fish"></div></section>
 
-  <section class="win s12" id="w-wx"><div class="wt"><i></i>Погода Нью-Йорка · розы ветров · воздушные массы · давление<span class="tag" id="t-wx"></span></div><div class="wb" id="b-wx"></div></section>
+  <section class="win s12" id="w-wx"><div class="wt"><i></i>Нью-Йорк: погода · розы ветров · воздушные массы · давление<span class="tag" id="t-wx"></span></div><div class="wb" id="b-wx"></div></section>
 
   <section class="win s12" id="w-cosmos">
     <div class="wt"><i></i>Космические данные<span class="tag" id="t-cosmos"></span></div>
@@ -762,11 +772,11 @@ function rUz(){
   if(now.k==='active')w.classList.add('blink-active');
   if(now.k==='approach')w.classList.add('blink-approach');
   if(now.k==='near')w.classList.add('blink-near');
-  $('#b-uz').innerHTML=`<div class="uzstate"><small>Состояние узбека</small><div style="color:${now.c}">${now.n}</div></div>
+  $('#b-uz').innerHTML=`<div class="uzstate"><small>Состояние</small><div style="color:${now.c}">${now.n}</div></div>
   <div class="pips">${UZ.map((x,i)=>`<span style="${i<=u.s?'background:'+now.c:''}"></span>`).join('')}</div>
   ${UZ.map((x,i)=>`<div class="stg ${i===u.s?'cur':''}"><span style="color:${x.c}">${i===u.s?'▶ ':''}${x.n}</span><span class="tm">${x.r}</span></div>`).join('')}
   <div class="pts ${cls(u.value)}">${fmtP(u.value)}</div>`;
-  $('#t-uz').textContent=now.n;
+  $('#t-uz').textContent='';   /* статус в заголовке не показываем */
 }
 
 const ITEM_TIERS=[
@@ -827,7 +837,7 @@ function rRank(){
     </div>
   </div>`;
   rankImg($('#rpic'),r);
-  $('#t-rank').textContent=noRank?'без ранга':r.r;
+  $('#t-rank').textContent='';   /* название ранга в заголовке не показываем */
 }
 
 /* ================== ШАНС ПОБЕДЫ НА КОМАНДУ ================== */
@@ -959,7 +969,7 @@ function rItem(){
   </div>
 `;
   itemImg($('#ipic'),it.n);
-  $('#t-item').textContent=cat.r+' · '+it.t;
+  $('#t-item').textContent='';   /* тип и уровень в заголовке не нужны */
 }
 
 /* ================== СЕЙСМОМОНИТОР ================== */
@@ -1026,7 +1036,7 @@ function rQuake(){
   <div class="qlist">${list}</div>
   <div class="pts ${cls(q.value)}">${fmtP(q.value)}</div>
   <div class="note">Данные USGS, зафиксированы в ${q.t} (NY).</div>`;
-  $('#t-quake').textContent=sh?'толчки':'спокойно';
+  $('#t-quake').textContent='';   /* статус в заголовке не показываем */
   initSeismo();
 }
 
@@ -1067,15 +1077,37 @@ async function fillHeroImg(box,name){
   return h||null;
 }
 async function rHero(){
-  const name=S.hero.name;
-  $('#b-hero').innerHTML=`<div class="hero"><div class="img" id="himg">${phHtml(name)}</div><h3>${name}</h3><p id="hrole"></p></div>`;
-  $('#t-hero').textContent=DAY;
+  const name=(S.hero&&S.hero.name)||'';
+  $('#b-hero').innerHTML=`<div class="hero"><div class="img" id="himg">${name?phHtml(name):'<div class="ph phq">?</div>'}</div><h3>${name||'&nbsp;'}</h3><p id="hrole"></p></div>`;
+  $('#t-hero').textContent='';   /* дата в заголовке не нужна */
   const h=await fillHeroImg($('#himg'),name);
   const role=h&&h.description&&h.description.role;if(role&&$('#hrole'))$('#hrole').textContent=role;
 }
+let HERO_PRES_H=0;
+function heroFit(el){
+  /* убираем запас под «?»-плейсхолдер: держим высоту по реальному низу содержимого */
+  el.style.minHeight='';
+  const ph=el.querySelector('.pimg .phq');
+  /* плейсхолдер-картинка и так 70x93, отдельного запаса быть не должно */
+  return Math.ceil(el.getBoundingClientRect().height);
+}
+function heroPresRef(){
+  /* эталонная карточка: та же разметка, что при показанном герое (с самой длинной подписью) */
+  const el=$('#pres');if(!el)return 0;
+  const keep=el.innerHTML;
+  el.innerHTML=`<div class="phero"><div class="pimg"><div class="ph phq">?</div></div><div><small>Имя, сегодня твой <i class="negword">отрицательный</i> герой:</small><h3>Герой</h3><small></small></div></div>
+  <div class="pts">?</div>
+  <div class="pnote negword">С этим героем будет связан ряд странностей или неудач</div>`;
+  const h=Math.ceil(el.getBoundingClientRect().height);
+  el.innerHTML=keep;
+  return h;
+}
 async function rPHero(){
   const p=S.pHero,el=$('#pres');
-  if(!p){el.innerHTML='<div class="note">Впиши имя — получишь своего персонажа на сегодня. Он добавит или отнимет очки. Бибоп, Рем и Аполло — проклятые герои: они всегда отнимают от −500 до −1000.</div>';return}
+  if(!HERO_PRES_H)HERO_PRES_H=heroPresRef();
+  el.style.minHeight=HERO_PRES_H?HERO_PRES_H+'px':'';   /* окно не меняет высоту */
+  el.classList.toggle('nolines',!p);
+  if(!p){el.innerHTML='<div class="phero pempty"><div class="pimg empty"><div class="ph phq">?</div></div><div><div class="note" style="margin-top:0">Впиши имя — получишь своего персонажа на сегодня. Он добавит или отнимет очки. Бибоп, Рем и Аполло — проклятые герои: они всегда отнимают от −500 до −1000.</div></div></div><div class="pts zerov">?</div>';return}
   const bad=BAD_HEROES.includes(p.hero);
   /* 0 считаем положительным: «отрицательный герой» только при минусе */
   const neg=p.value<0,word=neg?['положительный','отрицательный']:['положительный','положительный'];
@@ -1104,7 +1136,11 @@ function rYT(msg){
       +(y.lastLink?`<div class="ytlast"><a href="${esc(y.lastLink)}" target="_blank" rel="noopener">▶ Ссылка на последнее видео</a></div>`:'')
     : '';
   $('#b-yt').innerHTML=`<div class="ytst">${st}${extra}</div>`;
-  $('#t-yt').textContent=y&&y.known?(y.video?'вышло':'не вышло'):'—';
+  const ty=$('#t-yt');
+  if(ty){
+    if(y&&y.known&&y.video){ty.innerHTML=`<b class="ytgain">+${Math.round(y.value||0)} очк.</b>`}
+    else ty.textContent=y&&y.known?'не вышло':'—';
+  }
 }
 /* --- получение данных YouTube без CORS: несколько независимых источников --- */
 const ytWait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -1555,7 +1591,7 @@ function rWx(){
    <div class="wc"><h4>Давление воздуха · гПа</h4>${lineChart([{data:h.p,c:'#b79bff'}],h.time,w.idx)}
     <div class="cv">Сейчас: <b>${c.p.toFixed(0)} гПа</b> (${(c.p*0.75006).toFixed(0)} мм рт. ст.) · за 6ч: <b class="${w.pTrend>=0?'pos':'neg'}">${w.pTrend>=0?'▲':'▼'} ${Math.abs(w.pTrend).toFixed(1)}</b>${w.pApprox?' <span class="muted">· источник давление не отдаёт, показано стандартное</span>':''}</div>${v(w.vPress,w.pTrend>=0?'давление растёт: плюс':'давление падает: минус')}</div>
   </div><div class="note">Данные ${w.src||'Open-Meteo'}, фиксируются в ${w.t} (NY). Если источник недоступен, страница сама берёт следующий по цепочке: api.weather.gov → wttr.in → met.no → CORS-прокси.</div>`;
-  $('#t-wx').textContent='Нью-Йорк · '+w.t;
+  $('#t-wx').textContent=w&&w.t?w.t:'';
 }
 
 /* ================== WORDLE (английский) ================== */
@@ -1666,7 +1702,7 @@ function rFish(){
    <div class="row"><span>Луна</span><b>${moonEmoji(age)} ${moonName(age)}</b></div>
    <div class="row"><span>Лучшее время</span><b>${f.wins.join(' · ')}</b></div>
    <h4 style="margin:14px 0 8px;font:700 12px Cinzel;letter-spacing:.14em;color:var(--gold)">${mn.toUpperCase()} ${p.y}</h4><div class="cal">${cal}</div>`;
-  $('#t-fish').textContent=f.bite?'клюёт':'не клюёт';
+  $('#t-fish').textContent='';   /* статус в заголовке не показываем */
 }
 
 /* ================== НОВОЕ: ПРАВОСЛАВНЫЙ КАЛЕНДАРЬ ================== */
@@ -1716,7 +1752,7 @@ function rOrth(){
   <div class="pts ${cls(o.value)}">${fmtP(o.value)}<small>${o.kind==='feast'?'праздник: плюс до +'+o.max:o.kind==='fast'?'пост: минус до −'+o.max:'обычный день: 0'}</small></div>
   <h4 class="osub">Ближайшие 6 дней</h4>${nx}
   <div class="note">Даты по юлианскому календарю, пересчитанные в григорианский. Пост даёт минус, праздник — плюс, обычный день — 0.</div>`;
-  $('#t-orth').textContent=KL[o.kind];
+  $('#t-orth').textContent='';   /* статус в заголовке не показываем */
 }
 
 /* ================== НОВОЕ: ГРУППА КРОВИ ================== */
@@ -1738,20 +1774,54 @@ function bloodCalc(){
   const rh=plus?bRint(rngFor('bloodrh|+|'+b.g),10,50):bRint(rngFor('bloodrh|-|'+b.g),5,50);
   return{g:b.g,rh:b.rh,sign,base,rhv:rh,wd,value:sign*(base+rh)};
 }
+/* высота окна крови фиксируется по «полному» виду (группа выбрана),
+   чтобы при переключении вариантов оно не меняло размер */
+function bloodFullBody(){
+  const c=bloodCalc();const g=(c&&c.g)||'A';
+  const wd=wdNY(),B=BLOOD[g];
+  const strip=[1,2,3,4,5,6,0].map(i=>`<div class="${B.sg[i]>0?'p':'m'} ${i===wd?'now':''}">${WDS[i]}<br><b>${B.sg[i]>0?'+':'−'}</b></div>`).join('');
+  return `<div class="row"><span>Сегодня</span><b>${WDN[wd]} · плюс</b></div>
+  <div class="row"><span>Бонус группы ${B.n}</span><b>+000</b></div>
+  <div class="row"><span>Бонус резуса Rh+</span><b>+00</b></div>
+  <div class="wk">${strip}</div>
+  <div class="pts p">+000</div>
+  <div class="note">Знак зависит от дня недели и группы. У каждой группы свой бонус.</div>`;
+}
+function lockBloodHeight(){
+  const box=$('#w-blood'),body=$('#b-blood');if(!box||!body)return;
+  if(box.dataset.hb&&!box.dataset.always){
+    box.style.minHeight=box.dataset.hb+'px';box.dataset.always='1';   /* задаём один раз, дальше только пересчёт по resize */
+  }
+  if(box.dataset.hb)return;
+  const keep=body.innerHTML;
+  const b0=bloodGet();
+  body.innerHTML=bloodForm(b0&&!b0.idk?b0:null,false)+bloodFullBody();
+  const h=Math.ceil(box.getBoundingClientRect().height);
+  body.innerHTML=keep;
+  if(h>0){box.dataset.hb=h;box.style.minHeight=h+'px'}
+  /* если реальный вид оказался выше (шрифт догрузился) — поднимаем планку, но не опускаем */
+  const cur=Math.ceil(box.getBoundingClientRect().height);
+  if(cur>+box.dataset.hb){box.dataset.hb=cur;box.style.minHeight=cur+'px'}
+}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{const box=$('#w-blood');if(box){delete box.dataset.hb;box.dataset.always='';box.style.minHeight=''}if(typeof rBlood==='function')rBlood();HERO_PRES_H=0;if(typeof rPHero==='function')rPHero()});
+function bloodForm(b,idk){
+  const opt=(v,t,cur)=>`<option value="${v}"${cur===v?' selected':''}>${t}</option>`;
+  return `<div class="frm"><select class="sel" id="bg" onchange="bloodUi()">${opt('','Группа…',b?b.g:'')}${Object.keys(BLOOD).map(k=>opt(k,BLOOD[k].n,b&&b.g)).join('')}${opt('?','я не знаю',b?b.g:'')}</select><select class="sel" id="brh"${idk?' disabled style="opacity:.45"':''}>${opt('+','Rh+',b?b.rh:'+')}${opt('-','Rh−',b?b.rh:'+')}</select><button onclick="setBlood()">Применить</button></div>`;
+}
 function rBlood(){
   const b=bloodGet(),wd=wdNY();let c=bloodCalc();
   const opt=(v,t,cur)=>`<option value="${v}"${cur===v?' selected':''}>${t}</option>`;
   const idk=!!(b&&b.idk);
   if(idk)c=null;   /* статистика не считается и не показывается */
-  const form=`<div class="frm"><select class="sel" id="bg" onchange="bloodUi()">${opt('','Группа…',b?b.g:'')}${Object.keys(BLOOD).map(k=>opt(k,BLOOD[k].n,b&&b.g)).join('')}${opt('?','я не знаю',b?b.g:'')}</select><select class="sel" id="brh"${idk?' disabled style="opacity:.45"':''}>${opt('+','Rh+',b?b.rh:'+')}${opt('-','Rh−',b?b.rh:'+')}</select><button onclick="setBlood()">Применить</button></div>`;
+  const form=bloodForm(b,idk);
+  const FOOT='<div class="note bfoot">Знак зависит от дня недели и группы. У каждой группы свой бонус.</div>';
   let body;
   if(idk){
     body=`<div class="row"><span>Сегодня</span><b>Группа не указана</b></div>
-    <div class="idk">Статистика группы не показывается: ты выбрал «я не знаю».</div>
-    <div class="pts zerov">0<small>группа крови: очков нет</small></div>
-    <div class="note">Очки за группу крови не начисляются. В итоговом расчёте это не считается ошибкой.</div>`;
+    <div class="idk">я не знаю: статистика группы не доступна, очки не засчитаны.</div>`;
   }else if(!c){
-    body='<div class="note">Выбери группу крови и резус и нажми «Применить». Пока группа не выбрана — 0 очков.</div>';
+    body=`<div class="row"><span>Сегодня</span><b>Группа не указана</b></div>
+    <div class="idk">Выбери группу крови и резус и нажми «Применить». Пока группа не выбрана — 0 очков.</div>`;
   }else{
     const B=BLOOD[c.g];
     const strip=[1,2,3,4,5,6,0].map(i=>`<div class="${B.sg[i]>0?'p':'m'} ${i===wd?'now':''}">${WDS[i]}<br><b>${B.sg[i]>0?'+':'−'}</b></div>`).join('');
@@ -1759,11 +1829,11 @@ function rBlood(){
     <div class="row"><span>Бонус группы ${B.n}</span><b>${c.base}</b></div>
     <div class="row"><span>Бонус резуса Rh${c.rh==='+'?'+':'−'}</span><b>${c.rhv}</b></div>
     <div class="wk">${strip}</div>
-    <div class="pts ${cls(c.value)}">${fmtP(c.value)}</div>
-    <div class="note">Знак зависит от дня недели и группы. У каждой группы свой бонус.</div>`;
+    <div class="pts ${cls(c.value)}">${fmtP(c.value)}</div>`;
   }
-  $('#b-blood').innerHTML=form+body;
-  $('#t-blood').textContent=idk?'я не знаю · 0':(c?(BLOOD[c.g].n+' Rh'+(c.rh==='+'?'+':'−')):'—');
+  $('#b-blood').innerHTML=form+body+FOOT;
+  $('#t-blood').textContent='';   /* в заголовке выбранный вариант не показываем */
+  lockBloodHeight();
 }
 function setBlood(){
   const g=$('#bg').value,rh=$('#brh').value;
@@ -1959,8 +2029,15 @@ function buildWindows(){
   $('#w-uz').parentNode.appendChild(mkWin('orth','Православный календарь'));   /* правая колонка, а не тройка с ютубом */
   const gr=$('#w-cosmos').parentNode;
 
-  gr.appendChild(mkWin('birth','Дата рождения · Пифагор','s6'));   /* дата рождения слева, карты таро правее */
-  gr.appendChild(mkWin('tarot','Карта таро дня','s6'));
+  gr.appendChild(mkWin('birth','Дата рождения · Пифагор','s6'));   /* карта таро дня теперь внутри «Космических данных» */
+  /* таро внутри космоса: под метеоритным дождём — такая же секция, без «окна в окне» */
+  const cp=$('#cp-horo');
+  if(cp&&!$('#b-tarot')){
+    const tsec=document.createElement('div');
+    tsec.className='metsec tsec';tsec.id='sec-tarot';
+    tsec.innerHTML=`<div class="mettitle">Карта таро дня<span id="t-tarot"></span></div><div id="b-tarot"></div>`;
+    cp.appendChild(tsec);
+  }
 }
 
 /* ================== КАРТА ТАРО ДНЯ ==================
@@ -2051,7 +2128,7 @@ function rTarot(){
       <div class="tmean">${esc(t.mean)}</div>
       <div class="tsrc">Колода Райдера — Уэйта · картинка с Викисклада</div>
     </div>
-    <div class="tpts"><div class="pts ${cls(t.value)}">${fmtP(t.value)}</div><small>очки за карту дня</small></div>
+    <div class="tpts"><div class="pts ${cls(t.value)}">${fmtP(t.value)}</div></div>
   </div>`;
   tarotImg($('#tpic'),t.img,t.n);
   $('#t-tarot').textContent='Аркан '+t.num;
@@ -2156,7 +2233,7 @@ function chatRender(keepScroll){
   const bot=$('#b-chat');if(!bot)return;
   if(chatState==='offline'){
     bot.innerHTML='<div class="chatoff">Стример не в сети</div>';
-    $('#t-chat').textContent='не в сети';return;
+    $('#t-chat').textContent='';return;
   }
   if(chatState==='loading'){bot.innerHTML='<div class="load">Проверяем эфир и подключаем чат…</div>';return}
   const list=chatMsgs.length
@@ -2166,7 +2243,7 @@ function chatRender(keepScroll){
   const l=$('#chatlist');
   if(l&&(keepScroll===true||!chatRender._init)){l.scrollTop=l.scrollHeight}
   chatRender._init=true;
-  $('#t-chat').textContent='в эфире';
+  $('#t-chat').textContent='';
 }
 /* ---------- источник 2: история по HTTPS (работает почти везде) ---------- */
 async function chatHistoryOnce(){
@@ -2338,6 +2415,11 @@ function markWin(id,on,warn){
     if(!t.hasAttribute('aria-label'))t.setAttribute('aria-label',(warn||'недостающие данные')+'. '+t.textContent.replace('⚠','').trim());
   }else{t.removeAttribute('title');t.removeAttribute('aria-label')}
 }
+addEventListener('resize',()=>{
+  const box=$('#w-blood');if(box){delete box.dataset.hb;box.dataset.always='';box.style.minHeight=''}
+  if(typeof rBlood==='function')rBlood();
+  HERO_PRES_H=0;if(typeof rPHero==='function')rPHero();
+});
 function syncWinAlerts(){
   /* мигаем только пока идёт игра: решён / не решён за 6 попыток / открыт кнопкой — уведомления нет */
   markWin('wd',!!(S.wd&&S.wd.status==='play'),'Wordle не решён — бонус за решение не учтён.');
@@ -2349,7 +2431,7 @@ function syncWinAlerts(){
 function renderAll(){
   const p=nyParts();
   $('#dateline').textContent='Нью-Йорк · '+new Date(Date.UTC(p.y,p.m-1,p.d,12)).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',weekday:'long',timeZone:'UTC'});
-  $('#t-cosmos').textContent=DAY;
+  $('#t-cosmos').textContent='';   /* дата в заголовке не нужна */
   wCur='';wMsg='';wRev=-1;
   rBtc();rUz();rQuake();rHero();rPHero();rYT();rHoro();rAstro();rMet();rWx();rFish();rWordle();rGem();rItem();rRank();rTarot();rTeam();rTwitch();rOrth();rBlood();rBirth();rResult();
   $('#pn').value=localStorage.getItem('fate_name')||'';
@@ -2388,5 +2470,5 @@ setInterval(tick,1000);
 setInterval(ytWatchdog,60*1000);
 setInterval(rAstro,10*60*1000);
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a549c4c4498cd2a0',t:'MTc5MzY5MjAyMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a549c4c4498cd2a0',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a553d4d6c91d782d',t:'MTc5Mzc5NzUzOA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a553d4d6c91d782d',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
