@@ -30,6 +30,9 @@ h1.mega{font:900 clamp(28px,5vw,58px) Cinzel,serif;text-align:center;letter-spac
 .col{display:flex;flex-direction:column;gap:18px;min-width:0}
 .center{min-width:0;display:flex;flex-direction:column;gap:18px}
 .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;padding:18px 24px 40px;max-width:1700px;margin:0 auto}
+/* разделитель: только линия с ромбом, без подписи */
+.divider{position:relative;max-width:1700px;margin:30px auto 0;padding:0 24px;height:1px;background:linear-gradient(90deg,rgba(230,180,94,0),rgba(230,180,94,.45) 22%,rgba(230,180,94,.45) 78%,rgba(230,180,94,0))}
+.divider:after{content:"";position:absolute;left:50%;top:-2.5px;width:6px;height:6px;margin-left:-3px;background:var(--gold);transform:rotate(45deg);box-shadow:0 0 10px rgba(230,180,94,.6)}
 .s5{grid-column:span 5}.s7{grid-column:span 7}.s12{grid-column:span 12}.s6{grid-column:span 6}
 @media(max-width:1200px){.layout{grid-template-columns:1fr 1fr}.center{grid-column:1/-1;order:-1}.s5,.s7,.s6{grid-column:span 12}}
 @media(max-width:720px){.layout{grid-template-columns:1fr}}
@@ -127,10 +130,14 @@ h1.mega{font:900 clamp(28px,5vw,58px) Cinzel,serif;text-align:center;letter-spac
 .trio>.win{display:flex;flex-direction:column;min-width:0}
 .trio>.win>.wb{flex:1;display:flex;flex-direction:column;min-width:0}
 .trio{grid-auto-rows:1fr}         /* строка одна: высоту задаёт самое высокое окно, но не чат безгранично */
-.trio>#w-chat{max-height:360px}
-.trio>#w-chat>.wb{overflow:hidden}
-.trio .chatlist{max-height:100%;overflow-y:auto}
-@media(max-width:1100px){.trio{grid-template-columns:1fr}}
+.trio>#w-chat{contain:size;max-height:none}
+/* размер окна чата не зависит от числа сообщений: высоту задаёт ряд,
+   как в состоянии «стример не в сети»; внутри — своя прокрутка */
+.trio>#w-chat>.wb{overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.trio .chatlist{flex:1;min-height:0;max-height:none;overflow-y:auto}
+@media(max-width:1100px){.trio{grid-template-columns:1fr}
+  .trio>#w-chat{contain:none;height:360px}
+  .trio .chatlist{max-height:none}}
 /* twitch: онлайн каналов */
 .twrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .twch{display:flex;align-items:center;gap:9px;padding:11px 12px;border:1px solid var(--line);border-radius:4px;background:rgba(0,0,0,.22);text-decoration:none;transition:.2s;min-width:0}
@@ -166,7 +173,8 @@ h1.mega{font:900 clamp(28px,5vw,58px) Cinzel,serif;text-align:center;letter-spac
 .pcap i{font-style:normal;font-weight:800}
 .posword{color:#8fe6b0}
 .negword{color:#ff9a9d}
-.pnote{margin-top:8px;font:600 12px Inter,sans-serif;line-height:1.45;text-align:center}
+.pnote{height:35px;margin-top:8px;min-height:35px;display:flex;align-items:center;justify-content:center;text-align:center;font:600 12px Inter,sans-serif;line-height:1.45}
+.pnote.blank{color:#5b5b69;font-weight:600}
 .chatoff{padding:22px 10px;text-align:center;font:700 18px Cinzel,serif;letter-spacing:.06em;color:var(--muted);border:1px dashed #3a3a4c;border-radius:4px}
 #w-chat .wb{min-height:0}
 .trio .chatlist{flex:1;max-height:none;min-height:150px;padding:8px 10px;overflow-x:hidden}
@@ -265,9 +273,10 @@ input:focus{border-color:var(--gold2)}
 .hero .phq{font-size:74px;line-height:1;color:rgba(230,180,94,.34);text-shadow:0 0 26px rgba(230,180,94,.18)}
 .pimg .phq{font-size:34px}
 .pimg.empty{border-style:dashed;border-color:rgba(230,180,94,.45);background:#0b0b11;display:flex;align-items:center;justify-content:center}
-#pres{display:flex;flex-direction:column}
-.phero.pempty{flex:1 1 auto;align-items:center}
-.phero.pempty .pimg{height:auto;aspect-ratio:auto;align-self:stretch;min-height:93px}
+#pres{display:flex;flex-direction:column;justify-content:flex-start}
+#pres .pts{min-height:59px}
+.phero.pempty{flex:none;align-items:center}
+.phero.pempty .pimg{height:auto;aspect-ratio:auto;align-self:flex-start;min-height:93px}
 .phero{display:flex;gap:12px;align-items:center;margin-top:12px}
 .pimg{width:70px;flex:none;aspect-ratio:3/4;border:1px solid var(--gold2);border-radius:4px;overflow:hidden;background:#0c0c11}
 .phero h3{font:900 20px Cinzel,serif;color:#fff;letter-spacing:.05em}
@@ -314,6 +323,14 @@ table.pt td,table.pt th{padding:6px 8px;border-bottom:1px solid #22222d;text-ali
 table.pt th{color:var(--muted);font:600 10.5px Inter;letter-spacing:.1em;text-transform:uppercase}
 table.pt td:last-child,table.pt th:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .pg{font:400 18px serif;margin-right:6px}
+/* надёжность рандомов */
+.rchart{border:1px solid var(--line);border-radius:4px;background:rgba(0,0,0,.22);padding:8px 10px}
+.wt .tag .rval{color:#4db2ff;font:700 11px Inter;letter-spacing:.04em}
+.rchart svg{width:100%;height:auto;display:block}
+.rchart svg text{fill:var(--muted);font:10px Inter,sans-serif}
+#w-rand .row{padding:3px 0;font-size:12px}
+#w-rand .rval{color:#4db2ff;font:700 15px Cinzel,serif}
+#w-rand .note{margin-top:6px;font-size:10.5px;line-height:1.4}
 /* weather */
 .wgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
 .wc{border:1px solid var(--line);border-radius:4px;background:rgba(0,0,0,.22);padding:12px}
@@ -441,6 +458,8 @@ footer{text-align:center;color:#5d5b68;font-size:12px;padding:10px 20px 40px}
   <section class="win s4" id="w-chat"><div class="wt"><i></i>Чат стрима · Metro<span class="tag" id="t-chat"></span></div><div class="wb" id="b-chat"></div></section>
     </div>
 
+    <section class="win" id="w-rand"><div class="wt"><i></i>Надёжность рандомов<span class="tag" id="t-rand"></span></div><div class="wb" id="b-rand"></div></section>
+
   </section>
 
   <aside class="col">
@@ -456,6 +475,8 @@ footer{text-align:center;color:#5d5b68;font-size:12px;padding:10px 20px 40px}
     <section class="win" id="w-uz"><div class="wt"><i></i>Уровень угрозы узбека<span class="tag" id="t-uz"></span></div><div class="wb" id="b-uz"></div></section>
   </aside>
 </main>
+
+<div class="divider" role="separator" aria-label="Разделитель"></div>
 
 <div class="grid">
   <section class="win s7" id="w-wd"><div class="wt"><span class="wtalert"></span><i></i>Wordle дня + Гематрия<span class="tag" id="t-wd"></span></div>
@@ -1097,7 +1118,7 @@ function heroPresRef(){
   const keep=el.innerHTML;
   el.innerHTML=`<div class="phero"><div class="pimg"><div class="ph phq">?</div></div><div><small>Имя, сегодня твой <i class="negword">отрицательный</i> герой:</small><h3>Герой</h3><small></small></div></div>
   <div class="pts">?</div>
-  <div class="pnote negword">С этим героем будет связан ряд странностей или неудач</div>`;
+  <div class="pnote negword">Этот герой проклятый</div>`;
   const h=Math.ceil(el.getBoundingClientRect().height);
   el.innerHTML=keep;
   return h;
@@ -1107,16 +1128,18 @@ async function rPHero(){
   if(!HERO_PRES_H)HERO_PRES_H=heroPresRef();
   el.style.minHeight=HERO_PRES_H?HERO_PRES_H+'px':'';   /* окно не меняет высоту */
   el.classList.toggle('nolines',!p);
-  if(!p){el.innerHTML='<div class="phero pempty"><div class="pimg empty"><div class="ph phq">?</div></div><div><div class="note" style="margin-top:0">Впиши имя — получишь своего персонажа на сегодня. Он добавит или отнимет очки. Бибоп, Рем и Аполло — проклятые герои: они всегда отнимают от −500 до −1000.</div></div></div><div class="pts zerov">?</div>';return}
+  if(!p){el.innerHTML='<div class="phero pempty"><div class="pimg empty"><div class="ph phq">?</div></div><div><div class="note" style="margin-top:0">Впиши имя — получишь своего персонажа на сегодня. Он добавит или отнимет очки. Бибоп, Рем и Аполло — проклятые герои: они всегда отнимают от −500 до −1000.</div></div></div><div class="pts zerov">?</div><div class="pnote blank">—</div>';heroPhLock();return}
   const bad=BAD_HEROES.includes(p.hero);
   /* 0 считаем положительным: «отрицательный герой» только при минусе */
   const neg=p.value<0,word=neg?['положительный','отрицательный']:['положительный','положительный'];
   const caption=`сегодня твой <i class="${neg?'negword':'posword'}">${neg?'отрицательный':'положительный'}</i> герой`;
-  const line=neg
-    ?'С этим героем будет связан ряд странностей или неудач'
-    :'Этот герой окажет хорошее влияние на игру';
+  const line=bad
+    ?'Этот герой проклятый'
+    :neg
+      ?'С этим героем будет связан ряд странностей или неудач'
+      :'Этот герой окажет хорошее влияние на игру';
   el.innerHTML=`<div class="phero"><div class="pimg" id="pimg">${phHtml(p.hero)}</div><div><small>${esc(p.name)}, ${caption}:</small><h3>${p.hero}</h3><small id="prole"></small></div></div>
-  <div class="pts ${cls(p.value)}">${fmtP(p.value)}${bad?'<small>проклятый герой</small>':''}</div>
+  <div class="pts ${cls(p.value)}">${fmtP(p.value)}</div>
   <div class="pnote ${neg?'negword':'posword'}">${line}</div>`;
   const h=await fillHeroImg($('#pimg'),p.hero);
   const role=h&&h.description&&h.description.role;if(role&&$('#prole'))$('#prole').textContent=role;
@@ -1803,7 +1826,7 @@ function lockBloodHeight(){
   const cur=Math.ceil(box.getBoundingClientRect().height);
   if(cur>+box.dataset.hb){box.dataset.hb=cur;box.style.minHeight=cur+'px'}
 }
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{const box=$('#w-blood');if(box){delete box.dataset.hb;box.dataset.always='';box.style.minHeight=''}if(typeof rBlood==='function')rBlood();HERO_PRES_H=0;if(typeof rPHero==='function')rPHero()});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{const box=$('#w-blood');if(box){delete box.dataset.hb;box.dataset.always='';box.style.minHeight=''}if(typeof rBlood==='function')rBlood();HERO_PRES_H=0;HERO_PH_H=0;if(typeof rPHero==='function')rPHero();if(typeof chatRender==='function')chatRender(true)});
 function bloodForm(b,idk){
   const opt=(v,t,cur)=>`<option value="${v}"${cur===v?' selected':''}>${t}</option>`;
   return `<div class="frm"><select class="sel" id="bg" onchange="bloodUi()">${opt('','Группа…',b?b.g:'')}${Object.keys(BLOOD).map(k=>opt(k,BLOOD[k].n,b&&b.g)).join('')}${opt('?','я не знаю',b?b.g:'')}</select><select class="sel" id="brh"${idk?' disabled style="opacity:.45"':''}>${opt('+','Rh+',b?b.rh:'+')}${opt('-','Rh−',b?b.rh:'+')}</select><button onclick="setBlood()">Применить</button></div>`;
@@ -2229,13 +2252,18 @@ function chatAdd(id,user,text,tags,ts){
   if(chatMsgs.length>CHAT_MAX)chatMsgs=chatMsgs.slice(-CHAT_MAX);
   chatRender(true);
 }
+function chatLockHeight(){
+  /* высоту чата задаёт ряд (YouTube/Twitch) через CSS — здесь только снимаем прежние ручные значения */
+  const w=$('#w-chat');if(!w)return;
+  if(w.style.height){w.style.height='';w.style.maxHeight='';w.style.minHeight=''}
+}
 function chatRender(keepScroll){
   const bot=$('#b-chat');if(!bot)return;
   if(chatState==='offline'){
     bot.innerHTML='<div class="chatoff">Стример не в сети</div>';
-    $('#t-chat').textContent='';return;
+    $('#t-chat').textContent='';chatLockHeight();return;
   }
-  if(chatState==='loading'){bot.innerHTML='<div class="load">Проверяем эфир и подключаем чат…</div>';return}
+  if(chatState==='loading'){bot.innerHTML='<div class="load">Проверяем эфир и подключаем чат…</div>';chatLockHeight();return}
   const list=chatMsgs.length
     ? chatMsgs.map(m=>`<div class="cm">${m.b}<b class="cu"${m.c?` style="color:${esc(m.c)}"`:''}>${esc(m.u)}</b><span class="ct">${esc(m.t)}</span></div>`).join('')
     : '<div class="load">Сообщений пока нет — ждём первые строки из чата…</div>';
@@ -2244,6 +2272,7 @@ function chatRender(keepScroll){
   if(l&&(keepScroll===true||!chatRender._init)){l.scrollTop=l.scrollHeight}
   chatRender._init=true;
   $('#t-chat').textContent='';
+  chatLockHeight();
 }
 /* ---------- источник 2: история по HTTPS (работает почти везде) ---------- */
 async function chatHistoryOnce(){
@@ -2318,6 +2347,13 @@ async function chatCheckLive(){
   }catch(e){}
   return null;
 }
+/* «?»-карточка не должна тянуться: высота — как у карточки с героем */
+let HERO_PH_H=0;
+function heroPhLock(){
+  const pim=document.querySelector('#pres .pimg');if(!pim)return;
+  if(!HERO_PH_H)HERO_PH_H=Math.ceil(pim.getBoundingClientRect().height)||93;
+  if(pim.style.height!==HERO_PH_H+'px'){pim.style.height=HERO_PH_H+'px';pim.style.minHeight=HERO_PH_H+'px'}
+}
 async function chatBoot(){
   const live=await chatCheckLive();
   chatLive=live;
@@ -2335,6 +2371,57 @@ function chatStart(){
   chatTickTimer=setInterval(chatBoot,45000);   /* начался/закончился эфир */
 }
 
+/* ================== НАДЁЖНОСТЬ РАНДОМОВ (декоративно, очков не даёт) ==================
+   Процент на каждый час берётся случайно из 1…30 и хранится по ключу «день|час» (NY),
+   поэтому значения не меняются при перезагрузке страницы и «досчитываются» каждый час. */
+const RAND_SLOTS=24,RAND_MAX=30;
+function randKey(d,p){return`rand|${d}|${p}`}
+function randValueFor(d,h){
+  const R=rngFrom(randKey(d,h));            /* детерминированно для конкретного часа */
+  return 1+Math.floor(R()*RAND_MAX);        /* 1…30 % */
+}
+function randSeries(){
+  const p=nyParts();const out=[];
+  for(let i=RAND_SLOTS-1;i>=0;i--){
+    const t=new Date(Date.now()-i*3600000),q=nyParts(t);
+    const d=q.y+'-'+pad(q.m)+'-'+pad(q.d);
+    out.push({h:q.h,v:randValueFor(d,q.h),now:i===0});
+  }
+  return out;
+}
+function randChart(pts,w=1040,h=210){
+  const P={l:44,r:10,t:14,b:24},n=pts.length;
+  const mx=100,mn=0;                       /* вертикаль: 25 / 50 / 75 / 100 % */
+  const X=i=>P.l+(w-P.l-P.r)*i/(n-1),Y=v=>P.t+(h-P.t-P.b)*(1-(v-mn)/(mx-mn));
+  let s=`<svg viewBox="0 0 ${w} ${h}">`;
+  for(let k=0;k<=4;k++){
+    const v=25*k,y=Y(v);
+    s+=`<line x1="${P.l}" x2="${w-P.r}" y1="${y}" y2="${y}" stroke="${v===0?'#33333f':'#22222d'}"/>`;
+    s+=`<text x="${P.l-6}" y="${y+3}" text-anchor="end">${v}</text>`;
+  }
+  pts.forEach((p,i)=>{if(i%3===0)s+=`<text x="${X(i)}" y="${h-6}" text-anchor="middle">${pad(p.h)}:00</text>`});
+  const d='M'+pts.map((p,i)=>X(i).toFixed(1)+','+Y(p.v).toFixed(1)).join('L');
+  s+=`<path d="${d}L${X(n-1)},${Y(0)}L${X(0)},${Y(0)}Z" fill="#4d8bff" fill-opacity=".12"/>`;
+  s+=`<path d="${d}" fill="none" stroke="#4db2ff" stroke-width="2" stroke-linejoin="round"/>`;
+  pts.forEach((p,i)=>{if(p.now)s+=`<circle cx="${X(i)}" cy="${Y(p.v)}" r="4" fill="#4db2ff"/>`});
+  const cur=pts[n-1];
+  s+=`<line x1="${X(n-1)}" x2="${X(n-1)}" y1="${P.t}" y2="${h-P.b}" stroke="#e6b45e" stroke-dasharray="3 3"/>`;
+  s+=`<text x="${X(n-1)}" y="${P.t-3}" text-anchor="end" style="fill:#e6b45e">${cur.v}%</text></svg>`;
+  return s;
+}
+function rRand(){
+  const el=$('#b-rand');if(!el)return;
+  const pts=randSeries(),cur=pts[pts.length-1];
+  el.innerHTML=`<div class="rchart">${randChart(pts)}</div>`;
+  /* статус — в заголовок окна */
+  const t=$('#t-rand');if(t)t.innerHTML=`на ${pad(cur.h)}:00 · <b class="rval">${cur.v}%</b>`;
+}
+let randTimer=null;
+function randStart(){
+  rRand();
+  const p=nyParts(),left=(60-p.mi)*60000-p.s*1000+1200;   /* до начала следующего часа */
+  setTimeout(()=>{rRand();if(randTimer)clearInterval(randTimer);randTimer=setInterval(rRand,3600000)},left);
+}
 /* ================== ОНЛАЙН-ГОРОСКОП ==================
    freehoroscopeapi.com — открытый HTTPS-API с CORS *, без ключа.
    Знак и очки остаются прежними (их выбирает локальная логика дня),
@@ -2418,7 +2505,8 @@ function markWin(id,on,warn){
 addEventListener('resize',()=>{
   const box=$('#w-blood');if(box){delete box.dataset.hb;box.dataset.always='';box.style.minHeight=''}
   if(typeof rBlood==='function')rBlood();
-  HERO_PRES_H=0;if(typeof rPHero==='function')rPHero();
+  HERO_PRES_H=0;HERO_PH_H=0;if(typeof rPHero==='function')rPHero();
+  if(typeof chatRender==='function')chatRender(true);
 });
 function syncWinAlerts(){
   /* мигаем только пока идёт игра: решён / не решён за 6 попыток / открыт кнопкой — уведомления нет */
@@ -2438,7 +2526,7 @@ function renderAll(){
 }
 function startDay(){
   DAY=nyDateStr();S=load();ensureStatic();shownChance=0;renderAll();
-  fetchBtc();fetchWeather();fetchQuake();checkYT();wPoolLoad();twitchStart();chatStart();horoStart();
+  fetchBtc();fetchWeather();fetchQuake();checkYT();wPoolLoad();twitchStart();chatStart();horoStart();randStart();
 }
 function tick(){
   const p=nyParts();
@@ -2470,5 +2558,5 @@ setInterval(tick,1000);
 setInterval(ytWatchdog,60*1000);
 setInterval(rAstro,10*60*1000);
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a553d4d6c91d782d',t:'MTc5Mzc5NzUzOA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a553d4d6c91d782d',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a564e5c048d21507',t:'MTc5Mzk3NjQ4OQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a564e5c048d21507',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
